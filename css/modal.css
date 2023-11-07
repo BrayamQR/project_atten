@@ -1,0 +1,172 @@
+.modal{
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    position: fixed;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, .5);
+    transition: all .4s ease;
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.content-modal{
+    width: 100%;
+    padding-bottom: 10px;
+    max-width: 500px;
+    margin: auto;
+    background: #fff;
+    box-shadow: 1px 7px 25px rgba(0,0,0,.6);
+    transition: all .4s ease;
+    transform: translateY(-30%);
+    border-radius: 10px;
+}
+
+#modal-mostrar .content-modal{
+    height: 500px;
+}
+#modal-mostrar .content-modal .cont-modal{
+    overflow: scroll;
+    height: calc(100% - 60px);
+	padding: 10px 20px;
+    overflow-x: hidden;
+}
+#modal-mostrar .content-modal .cont-modal::-webkit-scrollbar{
+    width: 7px;
+}
+#modal-mostrar .content-modal .cont-modal::-webkit-scrollbar-thumb{
+    background: #01071c;
+    border-radius: 15px;
+}
+.content-modal .modal-title{
+    position: relative;
+    background: rgba(2, 18, 49, .9);
+    width: 100%;
+    height: 60px;
+    border-radius: 10px 10px 0 0;
+}
+.content-modal h5{
+    height: 60px;
+    margin-left: 10px;
+    line-height: 60px;
+    color: #fff;
+    font-size: 20px;
+}
+.content-modal label{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 10px;
+    color: #fff;
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 50%;
+    background: #8f1010;
+    transition: all .4s ease;
+    text-align: center;
+}
+.content-modal label:hover{
+	background: #072eaf;
+}
+#btn-modal-export:checked ~ #modal-export{
+    opacity: 1;
+    visibility: visible;
+}
+#btn-modal-export:checked ~ #modal-export .cont-modal{
+    transform: translateY(0%);
+}
+#btn-modal-mostrar:checked ~ #modal-mostrar{
+    opacity: 1;
+    visibility: visible;
+}
+#btn-modal-add:checked ~ #modal-add{
+    opacity: 1;
+    visibility: visible;
+}
+#btn-modal-mostrar:checked ~ #modal-mostrar .content-modal{
+    transform: translateY(0%);
+}
+#btn-modal-add:checked ~ #modal-add .content-modal{
+    transform: translateY(0%);
+}
+.btn-modal{
+    display: none;
+}
+.content-modal .cont-modal{
+    width: 100%;
+    height: 100%;
+    padding: 15px;
+}
+.content-modal .cont-modal h6{
+    font-size: 25px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+.content-modal .cont-modal form .content-input-modal{
+    width: 100%;
+    height: 45px;
+    position: relative;
+    line-height: 45px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+form .content-input-modal input, form .content-input-modal select{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 45px;
+    width: 100%;
+    font-size: 18px;
+    padding-left: 50px;
+    border-radius: 10px;
+    outline: none;
+    border: 2px solid #d4d4d4;
+}
+form .content-input-modal input:focus{
+    border: 2px solid #444070;
+}
+form .content-input-modal i{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 99;
+    height: 45px;
+    width: 45px;
+    line-height: 45px;
+    font-size: 20px;
+    text-align: center;
+    background: #444070;
+    color: #fff;
+    border-radius: 10px 0 0 10px;
+}
+.cont-modal form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.cont-modal form input[type='submit']{
+    width: 150px;
+    height: 50px;
+    justify-content: center;
+    border: none;
+    background: #072eaf;
+    color: #fff;
+    font-size: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all .5s ease;
+}
+.cont-modal form input[type='submit']:hover{
+    transform: scale(1.1);
+}
