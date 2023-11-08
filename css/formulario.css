@@ -37,9 +37,6 @@ form .grupo-radio .grupo-radio-input .label-radio::before{
     left: 17px;
     top: 7px;
 }
-form .grupo-radio {
-    padding-bottom: 70px;
-}
 form input[type="radio"]:checked + .label-radio{
     padding: 5px 15px;
     background: #0774d9;
@@ -63,7 +60,7 @@ form .form-input{
     flex-wrap: wrap;
     justify-content: space-between;
 }
-form .form-input .formulario-grupo{
+form .form-input .formulario-grupo .input-content{
     position: relative;
 }
 .form-input .formulario-grupo{   
@@ -74,12 +71,13 @@ form .form-input .formulario-grupo{
 .form-input .formulario-grupo-full{
     width: 100%;
     margin-bottom: 30px;
+    left: ;
 }
 .formulario-grupo .input-content{
     width: 100%;
-    height: 100%;
     display: flex;
 }
+
 form .form-input .input-content input, form .form-input .input-content select,form .form-input .input-content textarea{
     width: 100%;
     height: 45px;
@@ -144,8 +142,11 @@ form .form-input .input-content .fijar{
     opacity: 0;
     position: absolute;
 }
-.formulario-grupo .select-add .formulario-validacion-estado{
-    left: 71%;
+.formulario-grupo .select-action .formulario-validacion-estado{
+    left: 85%;
+}
+.formulario-grupo .input-action .formulario-validacion-estado{
+    left: 90%;
 }
 .formulario-grupo .input-select .formulario-validacion-estado{
     right: 15px;
@@ -188,14 +189,15 @@ form .formulario-grupo-correcto .input-content input, form .formulario-grupo-inc
 .formulario-input-error-activo{
     display: block;
 }
-.form-input .grupo-select{
+.form-input .grupo-action .grupo-input-action{
     display: flex;
     justify-content: space-between;
 }
-.form-input .grupo-select .select-action{
+
+.form-input .grupo-action .grupo-input-action .btn-action{
     display: flex;
 }
-.grupo-select .select-action label, .grupo-select .select-action a{
+.grupo-action .grupo-input-action .btn-action label, .grupo-action .grupo-input-action .btn-action a,.grupo-action .btn-action button{
     margin-left: 10px;
     right: 0;
     height: 45px;
@@ -208,18 +210,23 @@ form .formulario-grupo-correcto .input-content input, form .formulario-grupo-inc
     color: #fff;
     transition: all .5s ease;
     cursor: pointer;
+    border: none;
 }
-.form-input .select-add{
+.form-input .select-action{
     width: 80%;
     margin-right: 20px;
 }
-.form-input .select-action .label-add{
+.form-input .input-action{
+    width: 90%;
+    margin-right: 20px;
+}
+.form-input .btn-action .label-add{
     background: #03a711;
 }
-.form-input .select-action .label-search{
+.form-input .btn-action .label-search{
     background: #031ca7;
 }
-form .form-action input:hover, form .form-action a:hover, .grupo-select .select-action label:hover, .grupo-select .select-action a:hover{
+form .form-action input:hover, form .form-action a:hover, .grupo-action .btn-action label:hover, .grupo-action .btn-action a:hover, .grupo-action .btn-action button:hover{
     transform: scale(1.2);
 }
 form .form-action a{
@@ -264,7 +271,8 @@ form .formulario-mensaje-activo{
     margin: 0 auto;
     width: 100%;
     height: auto;
-    max-width: 500px;
+    display: flex;
+    justify-content: space-between;
 }
 .input-content .input-image{
     display: none;
@@ -311,5 +319,25 @@ form .formulario-mensaje-activo{
     margin: auto;
     display: block;
     overflow: cover;
-    
+}
+.input-content .content-qr{
+    width: 330px;
+    height: 330px;
+    overflow: hidden;
+    margin-left: 80px;
+    display: none;
+}
+.input-content .content-qr img{
+    width: 98%;
+    margin: auto;
+    display: block;
+    overflow: cover;
+}
+.formulario-grupo-full .input-content{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.input-content .content-qr-active{
+    display: block;
 }

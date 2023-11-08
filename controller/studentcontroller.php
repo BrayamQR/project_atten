@@ -21,17 +21,10 @@ class studentController
                 while ($obj = $rspta->fetch_object()) {
                     array_push($data, $obj);
                 }
-                $options = '';
                 if (!empty($data)) {
                     for ($i = 0; $i < count($data); $i++) {
                         $idstudent = $data[$i]->Id_Alumno;
-                        $options = '';
-                        if ($data[$i]->Qr_Alumno === null || $data[$i]->Qr_Alumno === "") {
-                            $options .= '<a href="studentform.php?id=' . $idstudent . '" class="fa-solid fa-tags" title="Generar QR"> </a>';
-                        } else {
-                            $options .= '<a href="studentform.php?id=' . $idstudent . '" class="fa-solid fa-tags" title="Ver codigo QR"> </a>';
-                        }
-                        $options .= '
+                        $options = '
                         <a href="studentform.php?id=' . $idstudent . '" class="fa-solid fa-tags" title="Modificar"> </a> 
                         <a class="fa-solid fa-trash-can" onclick="Eliminar(' . $idstudent . ')" title="Eliminar"></a>
                         ';
@@ -60,13 +53,11 @@ class studentController
                         } else {
                             unset($data['id']);
                             unset($data['submit']);
-                            $data['qr'] = null;
+                            $data['qr'] = "qr_" . $data['dni'] . ".png";
                             $rspta = $this->studentModel->Insertar(...$data);
                             if ($rspta) {
                                 require "../lib/phpqrcode/qrlib.php";
-                                $data['qr'] = "qr_" . $data['dni'] . ".png";
                                 QRcode::png($data['dni'], "../src/qr-student/" . $data['qr'], "L", 10, 5);
-                                $this->studentModel->GenerarQR($data['dni'], $data['qr']);
                                 $arrayResponse = array('status' => true, 'msg' => 'Datos guardados correctamente');
                             } else {
                                 $arrayResponse = array('status' => false, 'msg' => 'Error al guardar los datos');
@@ -78,6 +69,7 @@ class studentController
                         } else {
                             unset($data['submit']);
                             unset($data['foto']);
+                            unset($data['qr']);
                             $rspta = $this->studentModel->Editar(...$data);
                             if ($rspta) {
                                 $arrayResponse = array('status' => true, 'msg' => 'Datos modificados correctamente');

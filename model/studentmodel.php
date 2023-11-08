@@ -49,15 +49,4 @@ class Estudiante
         mysqli_close($this->cnx);
         return $query;
     }
-    public function GenerarQR($dni, $qr)
-    {
-        $sql = "UPDATE alumno SET Qr_Alumno='$qr' WHERE Dni_Alumno= '$dni'";
-        $query = mysqli_query($this->cnx, $sql);
-        mysqli_close($this->cnx);
-        return $query;
-    }
-    public function lastInsertId()
-    {
-        return mysqli_insert_id($this->cnx);
-    }
 }

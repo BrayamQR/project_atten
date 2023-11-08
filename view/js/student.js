@@ -3,6 +3,7 @@ function init(){
         Listar();
     }
     if(document.querySelector('#formulario')){
+        SelectImage();
         let formulario = document.querySelector("#formulario");
         formulario.onsubmit = function(e){
             e.preventDefault();
@@ -26,7 +27,7 @@ function init(){
         let inputsearch = document.querySelector("#search_input");
         inputsearch.addEventListener("keyup",InputSearch,true)
     }
-    SelectImage();  
+    
 }
 async function Listar(){
     document.querySelector("#tblbodylista").innerHTML = "";
@@ -120,6 +121,14 @@ async function Mostrar(id){
             else{
                 document.querySelector("#imagenmuestra").src = "../src/img-student/"+json.data.Foto_Alumno;
             }
+            document.querySelector("#qr").value = json.data.Qr_Alumno;
+            if(json.data.Qr_Alumno === null || json.data.Qr_Alumno === ""){
+                document.querySelector('.content-qr').classList.remove('content-qr-active');
+            }
+            else{
+                document.querySelector('.content-qr').classList.add('content-qr-active');
+                document.querySelector("#qrmuestra").src = "../src/qr-student/"+json.data.Qr_Alumno;
+            }
         }
     } catch (error) {
         console.log(error)
@@ -199,7 +208,6 @@ async function Buscar(){
                                     <td data-label="Sección" class="rcab">${item.Seccion_Aula}</td>
                                     <td data-label="Acciones">
                                         <div class="data-action">
-                                            ${item.Qr_Alumno === null || item.Qr_Alumno === "" ? `<a href="userform.php?id=${item.Id_Alumno}" class="fa-solid fa-tags" title="Generar QR"> </a>`:`<a href="userform.php?id=${item.Id_Alumno}" class="fa-solid fa-tags" title="Ver codigo QR"> </a>`} 
                                             <a href="userform.php?id=${item.Id_Alumno}" class="fa-solid fa-tags" title="Modificar"> </a>
                                             <a class="fa-solid fa-trash-can" onclick="Eliminar(${item.Id_Alumno})" title="Eliminar"></a>
                                         </div>
@@ -239,5 +247,27 @@ function SelectImage(){
         }
 
     })
+}
+
+function SearchByDni(){
+    try {
+        dni = document.getElementById('dni').value;
+        $.ajax({
+            url : '../config/api_reniec.php',
+            type: 'post',
+            data: 'dni='+dni,
+            dataType: 'json',
+            success: function(e){
+                if(e.numeroDocumento == dni){
+                    document.querySelector("#nombre").nextElementSibling.classList.add('fijar');
+                    document.querySelector("#nombre").value = e.nombres;
+                    document.querySelector("#apellido").nextElementSibling.classList.add('fijar');
+                    document.querySelector("#apellido").value = e.apellidoPaterno+" "+e.apellidoMaterno;
+                }
+            } 
+        })
+    } catch (error) {
+        console.log(error)
+    }
 }
 init();

@@ -32,14 +32,19 @@ include("../config/session.php");
                         <form id="formulario">
                             <div class="form-input">
                                 <input type="hidden" name="id" value="" id="id">
-                                <div class="formulario-grupo" id="grupo-dni">
-                                    <div class="input-content">
-                                        <i class="fa-solid fa-address-card"></i>
-                                        <input class="input-form" type="text" id="dni" name="dni" value="" maxlength="8">
-                                        <label class="input-label" for="">DNI</label>
-                                        <i class="formulario-validacion-estado fa-solid fa-xmark"></i>
+                                <div class="formulario-grupo grupo-action" id="grupo-dni">
+                                    <div class="grupo-input-action">
+                                        <div class="input-content input-action">
+                                            <i class="fa-solid fa-address-card"></i>
+                                            <input class="input-form" type="text" id="dni" name="dni" value="" maxlength="8">
+                                            <label class="input-label" for="">DNI</label>
+                                            <i class="formulario-validacion-estado fa-solid fa-xmark"></i>
+                                        </div>
+                                        <div class="btn-action">
+                                            <button type="button" id="buscarbydni" class="fa-solid fa-magnifying-glass label-search" title="Buscar..." onclick="SearchByDni()"></button>
+                                        </div>
                                     </div>
-                                    <p class="formulario-input-error">El DNI solo debe contener numeros (8 caracteres)</p>
+                                    <p class="formulario-input-error ">El DNI solo debe contener numeros (8 caracteres)</p>
                                 </div>
                                 <div class="formulario-grupo" id="grupo-nombres">
                                     <div class="input-content">
@@ -59,20 +64,22 @@ include("../config/session.php");
                                     </div>
                                     <p class="formulario-input-error">El apellido solo debe contener letras y espacios.</p>
                                 </div>
-                                <div class="formulario-grupo grupo-select" id="grupo-rol">
-                                    <div class="input-content input-select select-add">
-                                        <i class="fa-solid fa-landmark"></i>
-                                        <select name="idaula" class="select-option input-form" id="idaula">
-                                            <option disabled selected value=""></option>
-                                            <option value="1">PRIMERO - UNICA</option>
-                                        </select>
-                                        <label class="input-label" for="">Grado y Sección</label>
-                                        <i class="formulario-validacion-estado fa-solid fa-xmark"></i>
-                                    </div>
-                                    <div class="select-action">
-                                        <label for="btn-modal-mostrar" class="fa-solid fa-magnifying-glass label-search" title="Mostrar categorías de usuario"></label>
+                                <div class="formulario-grupo  grupo-action" id="grupo-rol">
+                                    <div class="grupo-input-action">
+                                        <div class="input-content input-select select-action">
+                                            <i class="fa-solid fa-landmark"></i>
+                                            <select name="idaula" class="select-option input-form" id="idaula">
+                                                <option disabled selected value=""></option>
+                                                <option value="1">PRIMERO - UNICA</option>
+                                            </select>
+                                            <label class="input-label" for="">Grado y Sección</label>
+                                            <i class="formulario-validacion-estado fa-solid fa-xmark"></i>
+                                        </div>
+                                        <div class="btn-action">
+                                            <label for="btn-modal-mostrar" class="fa-solid fa-magnifying-glass label-search" title="Mostrar categorías de usuario"></label>
 
-                                        <label for="btn-modal-add" class="fa-solid fa-plus label-add" title="Agregar nueva categoría"></label>
+                                            <label for="btn-modal-add" class="fa-solid fa-plus label-add" title="Agregar nueva categoría"></label>
+                                        </div>
                                     </div>
                                     <p class="formulario-input-error">Debe seleccionar una opcion.</p>
                                 </div>
@@ -80,9 +87,14 @@ include("../config/session.php");
                                     <div class="input-content">
                                         <input type="file" name="foto" id="foto" class="input-image">
                                         <input type="hidden" name="imagenactual" id="imagenactual" value="">
-                                        <button type="button" class="btn-image" onclick="document.getElementById('foto').click()"><i class="fa-solid fa-camera"></i> Subir una foto</button>
-                                        <div class="content-image">
-                                            <img src="../img/student.png" id="imagenmuestra">
+                                        <div class="content-photo">
+                                            <button type="button" class="btn-image" onclick="document.getElementById('foto').click()"><i class="fa-solid fa-camera"></i> Subir una foto</button>
+                                            <div class="content-image">
+                                                <img src="../img/student.png" id="imagenmuestra">
+                                            </div>
+                                        </div>
+                                        <div class="content-qr">
+                                            <img src="" id="qrmuestra">
                                         </div>
                                         <input type="hidden" name="qr" id="qr" value="">
                                     </div>

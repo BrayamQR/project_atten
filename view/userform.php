@@ -113,9 +113,9 @@ include("../config/session.php");
                                     </div>
                                     <p class="formulario-input-error">Ambas contraseñas deben ser iguales.</p>
                                 </div>
-                                <div class="formulario-grupo" id="grupo-rol">
-                                    <div class="grupo-select">
-                                        <div class="input-content input-select select-add">
+                                <div class="formulario-grupo grupo-action" id="grupo-rol">
+                                    <div class="grupo-input-action">
+                                        <div class="input-content input-select select-action">
                                             <i class="fa-solid fa-users"></i>
                                             <select name="idtipo" class="select-option input-form" id="idtipo">
                                                 <option disabled selected value=""></option>
@@ -124,7 +124,7 @@ include("../config/session.php");
                                             <label class="input-label" for="">Tipo de usuario</label>
                                             <i class="formulario-validacion-estado fa-solid fa-xmark"></i>
                                         </div>
-                                        <div class="select-action">
+                                        <div class="btn-action">
                                             <label for="btn-modal-mostrar" class="fa-solid fa-magnifying-glass label-search" title="Mostrar categorías de usuario"></label>
 
                                             <label for="btn-modal-add" class="fa-solid fa-plus label-add" title="Agregar nueva categoría"></label>
