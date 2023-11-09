@@ -59,11 +59,12 @@ include('../config/session.php');
             </div>
         </main>
     </div>
-    <?php
-    include("../config/global_script.php");
-    if (isset($_GET['exito']) && $_GET['exito'] === '1' && isset($_GET['msg'])) {
-        $mensaje = urldecode($_GET['msg']);
-        echo '<script>
+</body>
+<?php
+include("../config/global_script.php");
+if (isset($_GET['exito']) && $_GET['exito'] === '1' && isset($_GET['msg'])) {
+    $mensaje = urldecode($_GET['msg']);
+    echo '<script>
                     Swal.fire(
                         "¡Felicidades!",
                         "' . $mensaje . '",
@@ -74,10 +75,8 @@ include('../config/session.php');
                         }
                     });
             </script>';
-    }
-    ?>
-    <script src="js/user.js"></script>
-
-</body>
+}
+?>
+<script src="js/user.js"></script>
 
 </html>

@@ -27,9 +27,9 @@ include('../config/session.php')
             </div>
         </main>
     </div>
-    <?php
-    include("../config/global_script.php");
-    ?>
 </body>
+<?php
+include("../config/global_script.php");
+?>
 
 </html>

@@ -14,8 +14,6 @@ function init(){
         let form_search = document.querySelector("#form_search");
         form_search.onsubmit = function(e){
             e.preventDefault();
-
-            
             let search = document.querySelector("#search_input").value;
             if(search == ""){
                 Listar();
@@ -27,7 +25,6 @@ function init(){
         let inputsearch = document.querySelector("#search_input");
         inputsearch.addEventListener("keyup",InputSearch,true)
     }
-    
 }
 async function Listar(){
     document.querySelector("#tblbodylista").innerHTML = "";
@@ -263,6 +260,13 @@ function SearchByDni(){
                     document.querySelector("#nombre").value = e.nombres;
                     document.querySelector("#apellido").nextElementSibling.classList.add('fijar');
                     document.querySelector("#apellido").value = e.apellidoPaterno+" "+e.apellidoMaterno;
+                }
+                else{
+                    Swal.fire(
+                        "¡Ocurrio un error!",
+                        "No se encontro a la persona",
+                        "warning"
+                    )
                 }
             } 
         })

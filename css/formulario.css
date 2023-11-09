@@ -17,7 +17,7 @@ form .grupo-radio .grupo-radio-input .label-radio{
 }
 form .grupo-radio .grupo-radio-input{
     align-items: center;
-    justify-content: center;
+    justify-content: start;
 
 }
 form .grupo-radio .grupo-radio-input .label-radio:hover{
@@ -71,7 +71,6 @@ form .form-input .formulario-grupo .input-content{
 .form-input .formulario-grupo-full{
     width: 100%;
     margin-bottom: 30px;
-    left: ;
 }
 .formulario-grupo .input-content{
     width: 100%;

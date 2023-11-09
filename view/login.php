@@ -49,7 +49,6 @@ if (isset($_POST['submit'])) {
 
         </form>
     </div>
-    <script src="https://kit.fontawesome.com/529e500c00.js" crossorigin="anonymous"></script>
 </body>
 
 </html>

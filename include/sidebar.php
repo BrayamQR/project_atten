@@ -48,7 +48,7 @@
                 <li>
                     <p class="submenu-name">Asistencia</p>
                 </li>
-                <li><a href="#">Marcar Asistencia</a></li>
+                <li><a href="registerattendance.php">Marcar Asistencia</a></li>
                 <li><a href="#">Ver Asistencias</a></li>
             </ul>
         </li>

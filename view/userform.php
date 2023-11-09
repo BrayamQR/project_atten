@@ -148,14 +148,14 @@ include("../config/session.php");
             </div>
         </main>
     </div>
-    <?php
-    include("../config/global_script.php");
-    ?>
-    <script src="js/user.js"></script>
-    <script>
-        let id = "<?= isset($_GET['id']) ? $_GET['id'] : '' ?>";
-        Mostrar(id);
-    </script>
 </body>
+<?php
+include("../config/global_script.php");
+?>
+<script src="js/user.js"></script>
+<script>
+    let id = "<?= isset($_GET['id']) ? $_GET['id'] : '' ?>";
+    Mostrar(id);
+</script>
 
 </html>
