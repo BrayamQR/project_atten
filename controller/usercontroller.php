@@ -29,7 +29,7 @@ class UserController
                     for ($i = 0; $i < count($data); $i++) {
                         $idusuario = $data[$i]->Id_Usuario;
                         $options = '
-                            <a href="#?id=' . $idusuario . '" class="fa-solid fa-arrow-rotate-left" title="Restaurar Contraseña"> </a> 
+                            <a onclick ="RestaurarPassword(' . $idusuario . ')"class="fa-solid fa-arrow-rotate-left" title="Restaurar Contraseña"> </a> 
                             <a href="userform.php?id=' . $idusuario . '&rute=auser" class="fa-solid fa-tags" title="Modificar"> </a>
                             <a class="fa-solid fa-trash-can" onclick="Eliminar(' . $idusuario . ')" title="Eliminar"></a>';
                         $data[$i]->options  = $options;
@@ -135,6 +135,20 @@ class UserController
                     $arrayResponse = array('status' => true, 'found' => count($data), 'data' => $data);
                 }
                 echo json_encode($arrayResponse);
+                break;
+            case 'restaurarpassword':
+                if ($_POST) {
+                    $idusuario = intval($_POST['idusuario']);
+                    $password = trim($_POST['password']);
+                    $rspta = $this->userModel->RestaurarPassword($idusuario, $password);
+                    if ($rspta) {
+                        $arrayResponse = array('status' => true, 'msg' => 'Contraseña restaurada correctamente');
+                    } else {
+                        $arrayResponse = array('status' => false, 'msg' => 'Error al restaurada la contraseña');
+                    }
+
+                    echo json_encode($arrayResponse);
+                }
                 break;
         }
     }

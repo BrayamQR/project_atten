@@ -57,4 +57,11 @@ class Usuario
         mysqli_close($this->cnx);
         return $query;
     }
+    public function RestaurarPassword($id, $password)
+    {
+        $sql = "UPDATE usuario SET Pass_Usuario='$password' WHERE Id_Usuario = $id";
+        $query = mysqli_query($this->cnx, $sql);
+        mysqli_close($this->cnx);
+        return $query;
+    }
 }

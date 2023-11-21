@@ -31,12 +31,17 @@ include("../config/session.php");
                         <form id="formulario">
                             <div class="form-input">
                                 <input type="hidden" name="id" value="" id="id">
-                                <div class="formulario-grupo" id="grupo-codigo">
-                                    <div class="input-content">
-                                        <i class="fa-solid fa-address-card"></i>
-                                        <input class="input-form" type="text" id="codigo" name="codigo" value="" maxlength="8">
-                                        <label class="input-label" for="">Código o DNI *</label>
-                                        <i class="formulario-validacion-estado fa-solid fa-xmark"></i>
+                                <div class="formulario-grupo grupo-action" id="grupo-codigo">
+                                    <div class="grupo-input-action">
+                                        <div class="input-content input-action">
+                                            <i class="fa-solid fa-address-card"></i>
+                                            <input class="input-form" type="text" id="codigo" name="codigo" value="" maxlength="8">
+                                            <label class="input-label" for="">Código o DNI *</label>
+                                            <i class="formulario-validacion-estado fa-solid fa-xmark"></i>
+                                        </div>
+                                        <div class="btn-action">
+                                            <button type="button" id="buscarbydni" class="fa-solid fa-magnifying-glass label-search" title="Buscar..." onclick="SearchByDni()"></button>
+                                        </div>
                                     </div>
                                     <p class="formulario-input-error">El Código solo debe contener numeros (8 caracteres max.)</p>
                                 </div>

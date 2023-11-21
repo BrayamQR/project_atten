@@ -20,25 +20,8 @@ function init(){
         ListarTipoUsuario()
         formulario.onsubmit = function(e){
             e.preventDefault();
-            let codigo = document.querySelector("#codigo").value;
-            let nombre = document.querySelector("#nombre").value;
-            let apellido = document.querySelector("#apellido").value;
-            let telefono = document.querySelector("#telefono").value;
-            let email = document.querySelector("#email").value;
-            let direccion = document.querySelector("#direccion").value;
-            let user = document.querySelector("#user").value;
-            let password = document.querySelector("#password").value;
-            let confipass = document.querySelector("#confipass").value;
-            let idtipo = document.querySelector("#idtipo").value;
-            if(codigo == "" || nombre == "" || apellido == "" || telefono == "" || email == "" || direccion == ""|| user == "" || password == "" || confipass == "" || idtipo == 0){
-                Swal.fire({
-                    icon: 'warning',
-                    title: '¡Ooh no!',
-                    text: 'Los campos con (*) son obligatorios'
-                })
-                return;
-            }
-            else if(campos.codigo && campos.nombre && campos.apellido && campos.telefono && campos.email && campos.direccion && campos.user && campos.password){
+            
+            if(campos.codigo && campos.nombre && campos.apellido && campos.telefono && campos.email && campos.direccion && campos.user && campos.password && campos.select){
                 GuardaryEditar();
             }
             else{
@@ -119,9 +102,26 @@ async function ListarTipoUsuario(){
     }
 }
 async function GuardaryEditar(){
-
+    let codigo = document.querySelector("#codigo").value;
+    let nombre = document.querySelector("#nombre").value;
+    let apellido = document.querySelector("#apellido").value;
+    let telefono = document.querySelector("#telefono").value;
+    let email = document.querySelector("#email").value;
+    let direccion = document.querySelector("#direccion").value;
+    let user = document.querySelector("#user").value;
+    let password = document.querySelector("#password").value;
+    let confipass = document.querySelector("#confipass").value;
+    let idtipo = document.querySelector("#idtipo").value;
+    if(codigo == "" || nombre == "" || apellido == "" || telefono == "" || email == "" || direccion == ""|| user == "" || password == "" || confipass == "" || idtipo == 0){
+        Swal.fire({
+            icon: 'warning',
+            title: '¡Ooh no!',
+            text: 'Los campos con (*) son obligatorios'
+        })
+        return;
+    }
     try {
-        if(password === confipass){
+        if(password == confipass){
             const data = new FormData(formulario);
             let resp = await fetch ('../controller/usercontroller.php?op=guardaryeditar',{
                 method: 'POST',
@@ -275,9 +275,9 @@ async function Buscar(){
                                         <td data-label="Tipo">${item.Desc_TipoUsuario}</td>
                                         <td data-label="Acciones">
                                             <div class="data-action">
-                                            <a href="#?id=${item.Cod_Usuario}" class="fa-solid fa-arrow-rotate-left" title="Restaurar contraseña"> </a> 
-                                            <a href="userform.php?id=${item.Cod_Usuario}&rute=auser" class="fa-solid fa-tags" title="Modificar"> </a>
-                                            <a class="fa-solid fa-trash-can" onclick="Eliminar(${item.Cod_Usuario})" title="Eliminar"></a>
+                                            <a onclick="RestaurarPassword(${item.Id_Usuario})"class="fa-solid fa-arrow-rotate-left" title="Restaurar contraseña"> </a> 
+                                            <a href="userform.php?id=${item.Id_Usuario}&rute=auser" class="fa-solid fa-tags" title="Modificar"> </a>
+                                            <a class="fa-solid fa-trash-can" onclick="Eliminar(${item.Id_Usuario})" title="Eliminar"></a>
                                             </div>
                                         </td>`;
                 document.querySelector("#tblbodylista").appendChild(newtr);
@@ -308,14 +308,15 @@ const expresiones = {
 	password: /^.{4,12}$/, // 4 a 12 digitos
 }
 const campos ={
-	codigo: false,
-    nombre: false,
-    apellido: false,
-	telefono: false,
-	email: false,
-	direccion: false, 
-	user: false,
-	password: false,
+	codigo: true,
+    nombre: true,
+    apellido: true,
+	telefono: true,
+	email: true,
+	direccion: true, 
+	user: true,
+	password: true,
+    select: true
 }
 const validarFormulario = (e) => {
     switch (e.target.name) {
@@ -394,14 +395,104 @@ const validarSelect = (select) => {
         document.querySelector(`#${`grupo-${select.id}`} .formulario-validacion-estado`).classList.add('fa-xmark');
         document.querySelector(`#${`grupo-${select.id}`} .formulario-validacion-estado`).classList.remove('fa-check');
         document.querySelector(`#${`grupo-${select.id}`} .formulario-input-error`).classList.add('formulario-input-error-activo');
-        return false; 
+        campos.select= false; 
     } else {
         document.getElementById(`grupo-${select.id}`).classList.remove('formulario-grupo-incorrecto');
         document.getElementById(`grupo-${select.id}`).classList.add('formulario-grupo-correcto');
         document.querySelector(`#${`grupo-${select.id}`} .formulario-validacion-estado`).classList.remove('fa-xmark');
         document.querySelector(`#${`grupo-${select.id}`} .formulario-validacion-estado`).classList.add('fa-check');
         document.querySelector(`#${`grupo-${select.id}`} .formulario-input-error`).classList.remove('formulario-input-error-activo');
-        return true; 
+        campos.select = true; 
     }
 };
+function SearchByDni(){
+    try {
+        documento = document.getElementById('codigo').value;
+        $.ajax({
+            url : '../config/api_reniec.php',
+            type: 'post',
+            data: 'dni='+documento,
+            dataType: 'json',
+            success: function(e){
+                if(e.numeroDocumento == documento){
+                    document.querySelector("#nombre").nextElementSibling.classList.add('fijar');
+                    document.querySelector("#nombre").value = e.nombres;
+                    document.querySelector("#apellido").nextElementSibling.classList.add('fijar');
+                    document.querySelector("#apellido").value = e.apellidoPaterno + " "+e.apellidoMaterno;
+                }
+                else{
+                    Swal.fire(
+                        "¡Ocurrio un error!",
+                        "No se encontro a la persona",
+                        "warning"
+                    )
+                }
+            } 
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+async function RestaurarPassword(id){
+    const formData = new FormData();
+    formData.append('idusuario',id)
+    try {
+        let resp = await fetch ('../controller/usercontroller.php?op=mostrar',{
+            method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache',
+            body: formData
+        });
+        json = await resp.json();
+        if(json.status){
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "La contraseña tomara su valor por defecto",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '¡Si, restaurar!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    ConfirmRestorePassword(id,json.data.User_Usuario);
+                }
+            })
+        }
+    }catch(error){
+        console.log(error)
+    }
+}
+async function ConfirmRestorePassword(id,password){
+    let formData = new FormData();
+    formData.append('idusuario',id);
+    formData.append('password',password);
+    try {
+        let resp = await fetch ('../controller/usercontroller.php?op=restaurarpassword',{
+            method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache',
+            body: formData
+        });
+        json = await resp.json();
+        if(json.status){
+            Swal.fire(
+                "¡Exito!",
+                json.msg,
+                "success"
+            )
+            Listar();
+        }
+        else{
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: json.msg
+            })
+        }   
+    } catch (error) {
+        console.log(error)
+    }
+}
 init()
