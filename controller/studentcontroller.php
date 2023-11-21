@@ -24,8 +24,12 @@ class studentController
                 if (!empty($data)) {
                     for ($i = 0; $i < count($data); $i++) {
                         $idstudent = $data[$i]->Id_Alumno;
-                        $options = '
-                        <a href="studentform.php?id=' . $idstudent . '" class="fa-solid fa-tags" title="Modificar"> </a> 
+                        if (!is_null($data[$i]->Qr_Alumno) && $data[$i]->Qr_Alumno !== '') {
+                            $options = '<a href="report/carnet.php?id=' . $idstudent . '&rute=astudent" class="fa-solid fa-file-pdf" title="Generar Carnet"> </a>';
+                        } else {
+                            $options = '<a class="fa-solid fa-qrcode" title="Generar QR" onclick="GenerarQR(' . $idstudent . ')"> </a>';
+                        }
+                        $options .= '<a href="studentform.php?id=' . $idstudent . '&rute=astudent" class="fa-solid fa-tags" title="Modificar"> </a> 
                         <a class="fa-solid fa-trash-can" onclick="Eliminar(' . $idstudent . ')" title="Eliminar"></a>
                         ';
                         $data[$i]->options  = $options;
@@ -38,33 +42,44 @@ class studentController
             case 'guardaryeditar':
                 if ($_POST) {
                     $data = $this->DataForm();
+                    if ($data['documento'] == null || $data['documento'] == "") {
+                        $namesrc = $data['codigo'];
+                    } else {
+                        $namesrc = $data['documento'];
+                    }
                     if (!file_exists($_FILES['foto']['tmp_name']) || !is_uploaded_file($_FILES['foto']['tmp_name'])) {
-                        $data['imagenactual'] = null;
+                        $data['imagenactual'] = "photo_" . $namesrc . ".jpg";
                     } else {
                         $ext = pathinfo($_FILES["foto"]["name"], PATHINFO_EXTENSION);
                         if ($_FILES['foto']['type'] == "image/jpg" || $_FILES['foto']['type'] == "image/jpeg" || $_FILES['foto']['type'] == "image/png") {
-                            $data['imagenactual'] = "photo_" . $data['dni'] . ".jpg";
+                            $data['imagenactual'] = "photo_" . $namesrc . ".jpg";
                             move_uploaded_file($_FILES["foto"]["tmp_name"], "../src/img-student/" . $data['imagenactual']);
                         }
                     }
                     if (empty($data["id"])) {
-                        if (empty($data["dni"]) || empty($data["nombre"]) || empty($data["apellido"]) || empty($data["idaula"])) {
+                        if (empty($data["codigo"]) || empty($data["nombre"]) || empty($data["apaterno"]) || empty($data["amaterno"]) || empty($data["fechanacimiento"]) || empty($data["idestado"]) || empty($data["sexo"]) || empty($data["idaula"])) {
                             $arrayResponse = array('status' => false, 'msg' => 'Error de datos');
                         } else {
                             unset($data['id']);
                             unset($data['submit']);
-                            $data['qr'] = "qr_" . $data['dni'] . ".png";
+                            if ($data['documento'] == null || $data['documento'] == "") {
+                                $namesrc = $data['codigo'];
+                            } else {
+                                $namesrc = $data['documento'];
+                            }
+                            $data['qr'] = "qr_" . $namesrc . ".png";
                             $rspta = $this->studentModel->Insertar(...$data);
                             if ($rspta) {
                                 require "../lib/phpqrcode/qrlib.php";
-                                QRcode::png($data['dni'], "../src/qr-student/" . $data['qr'], "L", 10, 5);
+
+                                QRcode::png($namesrc, "../src/qr-student/" . $data['qr'], "L", 10, 5);
                                 $arrayResponse = array('status' => true, 'msg' => 'Datos guardados correctamente');
                             } else {
                                 $arrayResponse = array('status' => false, 'msg' => 'Error al guardar los datos');
                             }
                         }
                     } else {
-                        if (empty($data["dni"]) || empty($data["nombre"]) || empty($data["apellido"]) || empty($data["idaula"])) {
+                        if (empty($data["codigo"]) || empty($data["nombre"]) || empty($data["apaterno"]) || empty($data["amaterno"]) || empty($data["fechanacimiento"]) || empty($data["idestado"]) || empty($data["sexo"]) || empty($data["idaula"])) {
                             $arrayResponse = array('status' => false, 'msg' => 'Error de datos');
                         } else {
                             unset($data['submit']);
@@ -115,7 +130,8 @@ class studentController
                     $data = array();
                     if (empty($_POST["search_input"])) {
                         $arrayResponse = array('status' => false, 'msg' => "Error de datos");
-                    } else {
+                    }
+                    if (!empty($_POST["search_input"])) {
                         $search = trim($_POST["search_input"]);
                         $arrayResponse = array('status' => false, 'found' => 0, 'data' => '');
                         $rspta = $this->studentModel->Buscar($search);
@@ -125,6 +141,35 @@ class studentController
                         if (!empty($data)) {
                             $arrayResponse = array('status' => true, 'found' => count($data), 'data' => $data);
                         }
+                    }
+                    echo json_encode($arrayResponse);
+                }
+                break;
+            case 'listarselectaula':
+
+                $rspta = $this->studentModel->ListarAulaVigente();
+                $data = array();
+                $arrayResponse = array('status' => false, 'data' => '');
+                while ($obj = $rspta->fetch_object()) {
+                    array_push($data, $obj);
+                }
+                if (!empty($data)) {
+                    $arrayResponse = array('status' => true, 'found' => count($data), 'data' => $data);
+                }
+                echo json_encode($arrayResponse);
+                break;
+            case 'generarqr':
+                if ($_POST) {
+                    $idalumno = intval($_POST['idalumno']);
+                    $infoqr = trim($_POST['infoqr']);
+                    $nameqr = "qr_" . $infoqr . ".png";
+                    $rspta = $this->studentModel->GenerarQR($idalumno, $nameqr);
+                    if ($rspta) {
+                        require "../lib/phpqrcode/qrlib.php";
+                        QRcode::png($infoqr, "../src/qr-student/" . $nameqr, "L", 10, 5);
+                        $arrayResponse = array('status' => true, 'msg' => 'Código QR generado correctamente');
+                    } else {
+                        $arrayResponse = array('status' => false, 'msg' => 'Error al generar el Código QR');
                     }
                     echo json_encode($arrayResponse);
                 }

@@ -4,8 +4,10 @@ let arrow = document.querySelectorAll(".arrow");
 var input = document.getElementsByClassName("input-form");
 
 
-btn.onclick = function(){
-    sidebar.classList.toggle("active");
+if(document.querySelector("#btn-menu")){
+    btn.onclick = function(){
+        sidebar.classList.toggle("active");
+    }
 }
 
 for (var i = 0; i<arrow.length; i++){

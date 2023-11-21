@@ -9,7 +9,8 @@ include('../config/session.php');
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
-    <title>Usuarios | Sistema de gestion</title>
+    <link rel="shortcut icon" href="../img/logo.png">
+    <title>Usuarios | Colégio 17 Setiembre</title>
 </head>
 
 <body>
@@ -23,24 +24,23 @@ include('../config/session.php');
                 include("../include/welcome.php")
                 ?>
                 <div class="data-info">
-                    <h1>USUARIOS</h1>
                     <div class="content-info">
                         <div class="content-action">
-                            <div class="content-search">
-                                <form id="form_search">
-                                    <button class="fa-solid fa-magnifying-glass btn-search" type="submit" title="Buscar"></button>
-                                    <input type="text" placeholder="Buscar por:   Nombres | Apellidos | DNI | Tipo de usuario" name="search_input" id="search_input">
-                                </form>
+                            <div class="content-search" id="form_search">
+                                <div class="content-search-text">
+                                    <button class="fa-solid fa-magnifying-glass btn-search" onclick="Buscar()" title="Buscar"></button>
+                                    <input type="text" name="search_input" id="search_input">
+                                    <label class="input-label" for="">Buscar por: Código | Nombres | Apellidos | Tipo</label>
+                                </div>
                             </div>
-
                             <div class="content-btn">
-                                <a href="userform.php" class="fa-solid fa-plus" title="Agregar"></a>
+                                <a href="userform.php?rute=auser" class="fa-solid fa-plus" title="Agregar"></a>
                             </div>
                         </div>
                         <table id="tblDatos">
                             <thead>
                                 <th>#</th>
-                                <th>DNI</th>
+                                <th>Código</th>
                                 <th>Nombre</th>
                                 <th>Dirección</th>
                                 <th>Telefono</th>
@@ -76,7 +76,9 @@ if (isset($_GET['exito']) && $_GET['exito'] === '1' && isset($_GET['msg'])) {
                     });
             </script>';
 }
+
 ?>
 <script src="js/user.js"></script>
+
 
 </html>

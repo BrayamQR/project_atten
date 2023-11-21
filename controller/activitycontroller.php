@@ -25,7 +25,7 @@ class activityController
                     for ($i = 0; $i < count($data); $i++) {
                         $idactivity = $data[$i]->Id_Actividad;
                         $options = '
-                        <a href="activityform.php?id=' . $idactivity . '" class="fa-solid fa-tags" title="Modificar"> </a>
+                        <a href="activityform.php?id=' . $idactivity . '&rute=aactivity" class="fa-solid fa-tags" title="Modificar"> </a>
                         <a class="fa-solid fa-trash-can" onclick="Eliminar(' . $idactivity . ')" title="Eliminar"></a>
                         ';
                         $data[$i]->options  = $options;
@@ -96,6 +96,26 @@ class activityController
                             $arrayResponse = array('status' => true, 'msg' => 'Registro eliminado exitosamente');
                         } else {
                             $arrayResponse = array('status' => false, 'msg' => 'No se puedo eliminar el registro');
+                        }
+                    }
+                    echo json_encode($arrayResponse);
+                }
+                break;
+            case 'buscar':
+                if ($_POST) {
+                    $data = array();
+                    if (empty($_POST['datotexto']) && empty($_POST['datofecha'])) {
+                        $arrayResponse = array('status' => false, 'msg' => "Error de datos");
+                    } else {
+                        $datofecha = trim($_POST['datofecha']);
+                        $datotexto = trim($_POST['datotexto']);
+                        $arrayResponse = array('status' => false, 'found' => 0, 'data' => '');
+                        $rspta = $this->activityModel->Buscar($datotexto, $datofecha);
+                        while ($obj = $rspta->fetch_object()) {
+                            array_push($data, $obj);
+                        }
+                        if (!empty($data)) {
+                            $arrayResponse = array('status' => true, 'found' => count($data), 'data' => $data);
                         }
                     }
                     echo json_encode($arrayResponse);

@@ -1,32 +1,40 @@
 function init(){
+    
     if(document.querySelector('#tblbodylista')){
         Listar();
     }
     if(document.querySelector('#formulario')){
+        ListarAulas();
         SelectImage();
         let formulario = document.querySelector("#formulario");
         formulario.onsubmit = function(e){
             e.preventDefault();
+            let codigo = document.querySelector("#codigo").value;
+            let nombre = document.querySelector("#nombre").value;
+            let apaterno = document.querySelector("#apaterno").value;
+            let amaterno = document.querySelector("#amaterno").value;
+            let fechanacimiento = document.querySelector("#fechanacimiento").value;
+            let idestado = document.querySelector("#idestado").value;
+            let sexo = document.querySelector("#sexo").value;
+            let idaula = document.querySelector("#idaula").value;
+            if(codigo == "" || nombre == "" || apaterno == "" ||amaterno == "" || fechanacimiento == "" || idestado == 0 || sexo == "" || idaula == 0){
+                Swal.fire({
+                    icon: 'warning',
+                    title: '¡Ooh no!',
+                    text: 'Los campos con (*) son obligatorios'
+                })
+                return;
+            }
             GuardaryEditar();
         }
     }
     if(document.querySelector('#form_search')){
-        let form_search = document.querySelector("#form_search");
-        form_search.onsubmit = function(e){
-            e.preventDefault();
-            let search = document.querySelector("#search_input").value;
-            if(search == ""){
-                Listar();
-            }
-            else{
-                Buscar();
-            }
-        }
         let inputsearch = document.querySelector("#search_input");
         inputsearch.addEventListener("keyup",InputSearch,true)
     }
 }
 async function Listar(){
+    
     document.querySelector("#tblbodylista").innerHTML = "";
     try {
         let resp = await fetch("../controller/studentcontroller.php?op=listar");
@@ -34,15 +42,24 @@ async function Listar(){
         if(json.status){
             let data = json.data;
             var i = 0;
+            let estadoamtricula = "";
             data.forEach((item) =>{
                 i++;
                 let newtr = document.createElement("tr");
                 newtr.id = "row_"+item.Id_Alumno;
+                if(item.Est_Matricula == 1){
+                    estadoamtricula = "DEFINITIVA";
+                }
+                else if(item.Est_Matricula == 2){
+                    estadoamtricula = "TRASLADADO";
+                }
                 newtr.innerHTML = `<td class="opacity">${i}</td>
-                                    <td data-label="DNI" class="rcab">${item.Dni_Alumno}</td>
-                                    <td data-label="Nombre">${item.Nom_Alumno} ${item.Ape_Alumno}</td>
-                                    <td data-label="Grado" >${item.Grado_Aula}</td>
-                                    <td data-label="Sección">${item.Seccion_Aula}</td>
+                                    <td data-label="Documento" class="rcab">${item.Doc_Alumno}</td>
+                                    <td data-label="Código">${item.Cod_Alumno}</td>
+                                    <td data-label="Nombre">${item.Nom_Alumno} ${item.Apa_Alumno} ${item.Ama_Alumno}</td>
+                                    <td data-label="Fecha Nacimiento" >${FormatDate(item.Fecha_Nacimiento)}</td>
+                                    <td data-label="Estado Matricula" >${estadoamtricula}</td>
+                                    <td data-label="Aula" >${item.Grado_Aula} - ${item.Seccion_Aula}</td>
                                     <td data-label="Acciones">
                                         <div class="data-action">
                                             ${item.options}
@@ -51,21 +68,34 @@ async function Listar(){
                 document.querySelector("#tblbodylista").appendChild(newtr);
             });
         }
-        console.log(json);
     } catch (error) {
         console.log(error)
     }
 }
-async function GuardaryEditar(){
-    let dni = document.querySelector("#dni").value;
-    let nombre = document.querySelector("#nombre").value;
-    let apellido = document.querySelector("#apellido").value;
-    let idaula = document.querySelector("#idaula").value;
-    let imagenactual = document.querySelector("#imagenactual").value;
-    if(dni == "" || nombre == "" || apellido == "" || idaula == 0){
-        document.querySelector(`#formulario-mensaje`).classList.add('formulario-mensaje-activo');
-        return;
+async function ListarAulas(){
+    document.querySelector("#idaula").innerHTML = "";
+    try {
+        let resp = await fetch("../controller/studentcontroller.php?op=listarselectaula");
+        json = await resp.json();
+        if(json.status){
+            let data = json.data;
+            let initialOption = document.createElement("option");
+            initialOption.value = ""; 
+            initialOption.disabled = true;
+            initialOption.selected = true;
+            document.querySelector("#idaula").appendChild(initialOption);
+            data.forEach((item) =>{
+                let newop = document.createElement("option");
+                newop.value = item.Id_Aula;
+                newop.innerHTML = `${item.Grado_Aula} - ${item.Seccion_Aula}`;
+                document.querySelector("#idaula").appendChild(newop);
+            });
+        }
+    } catch (error) {
+        console.log(error);
     }
+}
+async function GuardaryEditar(){
     try {
         const data = new FormData(formulario);
         let resp = await fetch ('../controller/studentcontroller.php?op=guardaryeditar',{
@@ -76,7 +106,7 @@ async function GuardaryEditar(){
         });
         json = await resp.json();
         if(json.status){
-            window.location.href = 'student.php?exito=1&msg='+encodeURIComponent(json.msg);
+            window.location.href = 'student.php?exito=1&msg='+encodeURIComponent(json.msg)+'&rute=mstudent';
             formulario.reset();
         }
         else{
@@ -103,12 +133,24 @@ async function Mostrar(id){
         json = await resp.json();
         if(json.status){
             document.querySelector("#id").value = json.data.Id_Alumno;
-            document.querySelector("#dni").value = json.data.Dni_Alumno;
-            document.querySelector("#dni").nextElementSibling.classList.add('fijar');
+            document.querySelector("#idtipodocumeto").value = json.data.Tipo_Documento;
+            document.querySelector("#idtipodocumeto").nextElementSibling.classList.add('fijar');
+            document.querySelector("#documento").value = json.data.Doc_Alumno;
+            document.querySelector("#documento").nextElementSibling.classList.add('fijar');
+            document.querySelector("#codigo").value = json.data.Cod_Alumno;
+            document.querySelector("#codigo").nextElementSibling.classList.add('fijar');
             document.querySelector("#nombre").value = json.data.Nom_Alumno;
             document.querySelector("#nombre").nextElementSibling.classList.add('fijar');
-            document.querySelector("#apellido").value = json.data.Ape_Alumno;
-            document.querySelector("#apellido").nextElementSibling.classList.add('fijar');
+            document.querySelector("#apaterno").value = json.data.Apa_Alumno;
+            document.querySelector("#apaterno").nextElementSibling.classList.add('fijar');
+            document.querySelector("#amaterno").value = json.data.Ama_Alumno;
+            document.querySelector("#amaterno").nextElementSibling.classList.add('fijar');
+            document.querySelector("#fechanacimiento").value = json.data.Fecha_Nacimiento;
+            document.querySelector("#fechanacimiento").nextElementSibling.classList.add('fijar');
+            document.querySelector("#idestado").value = json.data.Est_Matricula;
+            document.querySelector("#idestado").nextElementSibling.classList.add('fijar');
+            document.querySelector("#sexo").value = json.data.Sexo_Alumno;
+            document.querySelector("#sexo").nextElementSibling.classList.add('fijar');
             document.querySelector("#idaula").value = json.data.Id_Aula;
             document.querySelector("#idaula").nextElementSibling.classList.add('fijar');
             document.querySelector("#imagenactual").value = json.data.Foto_Alumno;
@@ -179,10 +221,13 @@ async function ConfigDelete(id){
 }
 async function Buscar(){
     document.querySelector("#tblbodylista").innerHTML = "";
-    
+    let search = document.querySelector("#search_input").value;
+    if(search == ""){
+        Listar();
+    }
     try {
-        let formData = new FormData(form_search);
-        
+        let formData = new FormData();
+        formData.append('search_input',search)
         let resp = await fetch ('../controller/studentcontroller.php?op=buscar',{
             method: 'POST',
             mode: 'cors',
@@ -194,18 +239,28 @@ async function Buscar(){
         if(json.status){
             let data = json.data;
             var i = 0;
+            let estadoamtricula = "";
             data.forEach((item)=>{
                 i++;
                 let newtr = document.createElement("tr");
                 newtr.id = "row_"+item.Id_Alumno;
+                if(item.Est_Matricula == 1){
+                    estadoamtricula = "DEFINITIVA";
+                }
+                else if(item.Est_Matricula == 2){
+                    estadoamtricula = "TRASLADADO";
+                }
                 newtr.innerHTML = `<td class="opacity">${i}</td>
-                                    <td data-label="DNI" class="rcab">${item.Dni_Alumno}</td>
-                                    <td data-label="Nombre">${item.Nom_Alumno} ${item.Ape_Alumno}</td>
-                                    <td data-label="Grado" class="rcab">${item.Grado_Aula}</td>
-                                    <td data-label="Sección" class="rcab">${item.Seccion_Aula}</td>
+                                    <td data-label="Documento" class="rcab">${item.Doc_Alumno}</td>
+                                    <td data-label="Código">${item.Cod_Alumno}</td>
+                                    <td data-label="Nombre">${item.Nom_Alumno} ${item.Apa_Alumno} ${item.Ama_Alumno}</td>
+                                    <td data-label="Fecha Nacimiento" >${FormatDate(item.Fecha_Nacimiento)}</td>
+                                    <td data-label="Estado Matricula" >${estadoamtricula}</td>
+                                    <td data-label="Aula" >${item.Grado_Aula} - ${item.Seccion_Aula}</td>
                                     <td data-label="Acciones">
                                         <div class="data-action">
-                                            <a href="userform.php?id=${item.Id_Alumno}" class="fa-solid fa-tags" title="Modificar"> </a>
+                                            ${item.Qr_Alumno !== null && item.Qr_Alumno !== '' ? `<a href="report/carnet.php?id=${item.Id_Alumno}&rute=astudent" class="fa-solid fa-file-pdf" title="Generar Carnet"> </a>`: `<a class="fa-solid fa-qrcode" title="Generar QR"> </a>`}
+                                            <a href="studentform.php?id=${item.Id_Alumno}&rute=astudent" class="fa-solid fa-tags" title="Modificar"> </a>
                                             <a class="fa-solid fa-trash-can" onclick="Eliminar(${item.Id_Alumno})" title="Eliminar"></a>
                                         </div>
                                     </td>`;
@@ -218,7 +273,6 @@ async function Buscar(){
     }
 }
 function InputSearch(){
-    
     let searchBus = document.querySelector("#search_input").value;
     if(searchBus == ""){
         Listar();
@@ -248,18 +302,20 @@ function SelectImage(){
 
 function SearchByDni(){
     try {
-        dni = document.getElementById('dni').value;
+        documento = document.getElementById('documento').value;
         $.ajax({
             url : '../config/api_reniec.php',
             type: 'post',
-            data: 'dni='+dni,
+            data: 'dni='+documento,
             dataType: 'json',
             success: function(e){
-                if(e.numeroDocumento == dni){
+                if(e.numeroDocumento == documento){
                     document.querySelector("#nombre").nextElementSibling.classList.add('fijar');
                     document.querySelector("#nombre").value = e.nombres;
-                    document.querySelector("#apellido").nextElementSibling.classList.add('fijar');
-                    document.querySelector("#apellido").value = e.apellidoPaterno+" "+e.apellidoMaterno;
+                    document.querySelector("#apaterno").nextElementSibling.classList.add('fijar');
+                    document.querySelector("#apaterno").value = e.apellidoPaterno;
+                    document.querySelector("#amaterno").nextElementSibling.classList.add('fijar');
+                    document.querySelector("#amaterno").value = e.apellidoMaterno;
                 }
                 else{
                     Swal.fire(
@@ -270,6 +326,61 @@ function SearchByDni(){
                 }
             } 
         })
+    } catch (error) {
+        console.log(error)
+    }
+}
+function FormatDate(date){
+    const  fechaISO = `${date}`;
+    const options ={
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        timeZone: 'America/Lima'
+    }
+    return new Date(fechaISO).toLocaleString('es-ES', options).replace(/\//g, '-');
+}
+async function GenerarQR(id){
+    let formData = new FormData();
+    formData.append('idalumno',id);
+    try {
+        let resp = await fetch ('../controller/studentcontroller.php?op=mostrar',{
+            method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache',
+            body: formData
+        });
+        json = await resp.json();
+        if(json.status){
+            if(json.data.Doc_Alumno == null || json.data.Doc_Alumno == ''){
+                formData.append('infoqr',json.data.Cod_Alumno);
+            }
+            else{
+                formData.append('infoqr',json.data.Doc_Alumno);
+            }
+            let resp = await fetch ('../controller/studentcontroller.php?op=generarqr',{
+                method: 'POST',
+                mode: 'cors',
+                cache: 'no-cache',
+                body: formData
+            });
+            json = await resp.json();
+            if(json.status){
+                Swal.fire(
+                    "¡Exito!",
+                    json.msg,
+                    "success"
+                )
+                Listar();
+            }
+            else{
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: json.msg
+                })
+            }
+        }
     } catch (error) {
         console.log(error)
     }

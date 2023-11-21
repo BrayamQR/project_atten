@@ -9,9 +9,9 @@ $curl = curl_init();
 // Buscar dni
 curl_setopt_array($curl, array(
     //para user api versión 2
-    CURLOPT_URL => 'https://api.apis.net.pe/v2/reniec/dni?numero=' . $dni,
+    //CURLOPT_URL => 'https://api.apis.net.pe/v2/reniec/dni?numero=' . $dni,
     //para user api versión 1
-    //CURLOPT_URL => 'https://api.apis.net.pe/v1/dni?numero=' . $dni,
+    CURLOPT_URL => 'https://api.apis.net.pe/v1/dni?numero=' . $dni,
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_SSL_VERIFYPEER => 0,
     CURLOPT_ENCODING => '',

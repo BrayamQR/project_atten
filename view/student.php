@@ -9,7 +9,8 @@ include('../config/session.php');
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
-    <title>Estudiantes | Sistema de Gestion</title>
+    <link rel="shortcut icon" href="../img/logo.png">
+    <title>Estudiantes | Colégio 17 Setiembre</title>
 </head>
 
 <body>
@@ -23,27 +24,30 @@ include('../config/session.php');
                 include("../include/welcome.php")
                 ?>
                 <div class="data-info">
-                    <h1>ESTUDIANTES</h1>
                     <div class="content-info">
                         <div class="content-action">
-                            <div class="content-search">
-                                <form id="form_search">
-                                    <button class="fa-solid fa-magnifying-glass btn-search" type="submit" title="Buscar"></button>
-                                    <input type="text" placeholder="Buscar por:   Nombres | Apellidos | DNI | Grado | Sección" name="search_input" id="search_input">
-                                </form>
+                            <div class="content-search" id="form_search">
+                                <div class="content-search-text">
+                                    <button class="fa-solid fa-magnifying-glass btn-search" title="Buscar" onclick="Buscar()"></button>
+                                    <input type="text" name="search_input" id="search_input">
+                                    <label class="input-label" for="">Buscar por: Nombre | Doc. Identidad | Código</label>
+                                </div>
+
                             </div>
 
                             <div class="content-btn">
-                                <a href="studentform.php" class="fa-solid fa-plus" title="Agregar"></a>
+                                <a href="studentform.php?rute=astudent" class="fa-solid fa-plus" title="Agregar"></a>
                             </div>
                         </div>
                         <table id="tblDatos">
                             <thead>
                                 <th>#</th>
-                                <th>DNI</th>
-                                <th>Nombre</th>
-                                <th>Grado</th>
-                                <th>Sección</th>
+                                <th>Doc. Identidad</th>
+                                <th>Código</th>
+                                <th>Nombres y Apellidos</th>
+                                <th>Fech. Nacimiento</th>
+                                <th>Estado Matricula</th>
+                                <th>Aula</th>
                                 <th>Acciones</th>
                             </thead>
                             <tbody id="tblbodylista">

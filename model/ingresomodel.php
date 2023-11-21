@@ -7,44 +7,55 @@ class Ingreso
     {
         $this->cnx = connection();
     }
-    public function Listar()
+    public function ListarIngreso()
     {
-        $sql = "SELECT * FROM ingreso INNER JOIN alumno ON ingreso.Id_Alumno = alumno.Id_Alumno";
+        $sql = "SELECT * FROM alumno INNER JOIN ingreso ON alumno.Id_Alumno = ingreso.Id_Alumno INNER JOIN aula ON alumno.Id_Aula = aula.Id_Aula";
         $query = mysqli_query($this->cnx, $sql);
         mysqli_close($this->cnx);
         return $query;
     }
-    public function Insertar($fechahora, $idalumno)
+    public function ElegirAlumno($doc)
     {
-        $sql = "INSERT INTO ingreso(Fecha_Hora, Id_Alumno) VALUES ('$fechahora','$idalumno')";
+        $sql = "SELECT * FROM alumno INNER JOIN aula ON alumno.Id_Aula = aula.Id_Aula WHERE Doc_Alumno = '$doc' OR Cod_Alumno = '$doc'";
         $query = mysqli_query($this->cnx, $sql);
         mysqli_close($this->cnx);
         return $query;
     }
-    public function Editar($id, $fechahora, $idalumno)
+    public function ValidarIngreso($id)
     {
-        $sql = "UPDATE ingreso SET Fecha_Hora='$fechahora',Id_Alumno='$idalumno' WHERE Id_Ingreso = $id";
+        $sql = "SELECT * FROM alumno INNER JOIN ingreso ON alumno.Id_Alumno = ingreso.Id_Alumno WHERE alumno.Id_Alumno = $id AND ingreso.Fecha_Ingreso = CURDATE()";
         $query = mysqli_query($this->cnx, $sql);
         mysqli_close($this->cnx);
         return $query;
     }
-    public function Eliminar($id)
+    public function RegistrarIngreso($id)
     {
-        $sql = "DELETE FROM ingreso WHERE Id_Ingreso = $id";
+        $sql = "CALL Insert_Ingreso($id,CURDATE(),CURTIME());";
         $query = mysqli_query($this->cnx, $sql);
         mysqli_close($this->cnx);
         return $query;
     }
-    public function Mostrar($id)
+    public function BuscarAlumno($dato)
     {
-        $sql = "SELECT * FROM ingreso INNER JOIN alumno ON ingreso.Id_Alumno = alumno.Id_Alumno WHERE Id_Ingreso  = $id";
+        $sql = "SELECT * FROM alumno WHERE Doc_Alumno LIKE '$dato%' OR Cod_Alumno LIKE '$dato%' OR Nom_Alumno LIKE '$dato%' OR Apa_Alumno LIKE '$dato%' OR Ama_Alumno LIKE '$dato%' LIMIT 0,10";
         $query = mysqli_query($this->cnx, $sql);
         mysqli_close($this->cnx);
         return $query;
     }
-    public function Buscar($dato)
+    public function Buscar($datotexto, $datofecha)
     {
-        $sql = "SELECT * FROM ingreso INNER JOIN alumno ON ingreso.Id_Alumno = alumno.Id_Alumno WHERE alumno.Dni_Alumno LIKE '$dato%' OR alumno.Nom_Alumno LIKE '$dato%' OR alumno.Ape_Alumno LIKE '$dato%' OR ingreso.Fecha_Hora LIKE '$dato%'";
+        if ($datofecha == null || $datofecha == "") {
+            $sql = "CALL Search_Ingreso('$datotexto',NULL)";
+        } else {
+            $sql = "CALL Search_Ingreso('$datotexto','$datofecha')";
+        }
+        $query = mysqli_query($this->cnx, $sql);
+        mysqli_close($this->cnx);
+        return $query;
+    }
+    public function ListarAulaVigente()
+    {
+        $sql = "SELECT * FROM aula";
         $query = mysqli_query($this->cnx, $sql);
         mysqli_close($this->cnx);
         return $query;

@@ -9,7 +9,8 @@ include('../config/session.php');
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
-    <title>Estudiantes | Sistema de Gestion</title>
+    <link rel="shortcut icon" href="../img/logo.png">
+    <title>Estudiantes | Colégio 17 Setiembre</title>
 </head>
 
 <body>
@@ -23,18 +24,25 @@ include('../config/session.php');
                 include("../include/welcome.php")
                 ?>
                 <div class="data-info">
-                    <h1>ACTIVIDADES</h1>
                     <div class="content-info">
                         <div class="content-action">
-                            <div class="content-search">
-                                <form id="form_search">
-                                    <button class="fa-solid fa-magnifying-glass btn-search" type="submit" title="Buscar"></button>
-                                    <input type="text" placeholder="Buscar por:   Nombres | Apellidos | DNI | Grado | Sección" name="search_input" id="search_input">
-                                </form>
+                            <div class="content-search" id="form_search">
+                                <div class="content-search-text">
+                                    <button class="fa-solid fa-magnifying-glass btn-search" title="Buscar" id="btn-search" onclick="Buscar()"></button>
+                                    <input type="text" class="input-form" name="search_input" id="search_input">
+                                    <label class="input-label" for="">Buscar: Motivo | Descripción</label>
+                                </div>
+                                <div class="content-search-date">
+                                    <input type="date" class="input-form" id="search_date">
+                                    <label class="input-label input-label-date" for="">Fecha</label>
+                                </div>
+                                <div class="content-btn-default-search">
+                                    <a onclick="QuitarFiltro()">Quitar Filtro</a>
+                                </div>
                             </div>
 
                             <div class="content-btn">
-                                <a href="activityform.php" class="fa-solid fa-plus" title="Agregar"></a>
+                                <a href="activityform.php?rute=aactivity" class="fa-solid fa-plus" title="Agregar"></a>
                             </div>
                         </div>
                         <table id="tblDatos">

@@ -1,7 +1,6 @@
 <?php
 require_once "../model/usermodel.php";
-
-
+include('../config/session.php');
 class UserController
 {
     private $userModel;
@@ -30,10 +29,9 @@ class UserController
                     for ($i = 0; $i < count($data); $i++) {
                         $idusuario = $data[$i]->Id_Usuario;
                         $options = '
-                        <a href="userform.php?id=${item.Cod_Usuario}" class="fa-solid fa-arrow-rotate-left" title="Restaurar Contraseña"> </a> 
-                        <a href="userform.php?id=' . $idusuario . '" class="fa-solid fa-tags" title="Modificar"> </a>
-                        <a class="fa-solid fa-trash-can" onclick="Eliminar(' . $idusuario . ')" title="Eliminar"></a>
-                        ';
+                            <a href="#?id=' . $idusuario . '" class="fa-solid fa-arrow-rotate-left" title="Restaurar Contraseña"> </a> 
+                            <a href="userform.php?id=' . $idusuario . '&rute=auser" class="fa-solid fa-tags" title="Modificar"> </a>
+                            <a class="fa-solid fa-trash-can" onclick="Eliminar(' . $idusuario . ')" title="Eliminar"></a>';
                         $data[$i]->options  = $options;
                     }
                     $arrayResponse['status'] = true;
@@ -125,6 +123,18 @@ class UserController
                     }
                     echo json_encode($arrayResponse);
                 }
+                break;
+            case 'listarselect':
+                $rspta = $this->userModel->ListarVigentes();
+                $data = array();
+                $arrayResponse = array('status' => false, 'data' => '');
+                while ($obj = $rspta->fetch_object()) {
+                    array_push($data, $obj);
+                }
+                if (!empty($data)) {
+                    $arrayResponse = array('status' => true, 'found' => count($data), 'data' => $data);
+                }
+                echo json_encode($arrayResponse);
                 break;
         }
     }

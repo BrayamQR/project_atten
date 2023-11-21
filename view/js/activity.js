@@ -20,25 +20,57 @@ function init(){
         HabilitarInputs();
         formulario.onsubmit = function(e){
             e.preventDefault();
+            let radioButtons = document.querySelectorAll(".input-radio");
+            let fechainicio = document.querySelector("#fechainicio").value;
+            let fechafin = document.querySelector("#fechafin").value;
+            let hora = document.querySelector("#hora").value;
+            let motivo = document.querySelector("#motivo").value;
+            let tipoactividad;
+            radioButtons.forEach(function(radioButton) {
+                if (radioButton.checked) {
+                    tipoactividad = radioButton.value;
+                }
+            });
+        
+            if(tipoactividad == 1){
+                if(fechainicio == "" || hora == "" || motivo == "" || fechafin == ""){
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '¡Ooh no!',
+                        text: 'Los campos con (*) son obligatorios'
+                    })
+                    return;
+                }
+            }
+            else if(tipoactividad == 2){
+                if(fechainicio == "" || hora == "" || motivo == ""){
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '¡Ooh no!',
+                        text: 'Los campos con (*) son obligatorios'
+                    })
+                    return;
+                }
+            }
+            else{
+                if(document.querySelector("#id").value == null || document.querySelector("#id").value == ""){
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '¡Ooh no!',
+                        text: 'Debe seleccionar un tipo de actividad'
+                    })
+                    return;
+                }
+            }
+            
             GuardaryEditar();
         }
     }
     if(document.querySelector('#form_search')){
-        let form_search = document.querySelector("#form_search");
-        form_search.onsubmit = function(e){
-            e.preventDefault();
-
-            
-            let search = document.querySelector("#search_input").value;
-            if(search == ""){
-                Listar();
-            }
-            else{
-                Buscar();
-            }
-        }
         let inputsearch = document.querySelector("#search_input");
-        inputsearch.addEventListener("keyup",InputSearch,true)
+        inputsearch.addEventListener("keyup",InputSearch,true);
+        let datesearch = document.querySelector("#search_date");
+        datesearch.addEventListener("change",InputSearch,true);
     }
 }
 async function Listar(){
@@ -55,8 +87,8 @@ async function Listar(){
                 let newtr = document.createElement("tr");
                 newtr.id = "row_"+item.Id_Actividad;
                 newtr.innerHTML = `<td class="opacity">${i}</td>
-                                    <td data-label="Fecha" class="rcab">${FormatDate(item.Hora_Ingreso,item.Fecha_Actividad)}</td>
-                                    <td data-label="Hora de ingreso">${FormatHora(item.Hora_Ingreso,item.Fecha_Actividad)}</td>
+                                    <td data-label="Fecha" class="rcab">${FormatDate(item.Hora_Actividad,item.Fecha_Actividad)}</td>
+                                    <td data-label="Hora de ingreso">${FormatHora(item.Hora_Actividad,item.Fecha_Actividad)}</td>
                                     <td data-label="Motivo" class="rcab">${item.Mot_Actividad}</td>
                                     <td data-label="Descripción" class="rcab">${item.Desc_Actividad}</td>
                                     <td data-label="Acciones">
@@ -73,30 +105,6 @@ async function Listar(){
     }
 }
 async function GuardaryEditar(){
-    let radioButtons = document.querySelectorAll(".input-radio");
-    let fechainicio = document.querySelector("#fechainicio").value;
-    let fechafin = document.querySelector("#fechafin").value;
-    let hora = document.querySelector("#hora").value;
-    let descripcion = document.querySelector("#descripcion").value;
-    let motivo = document.querySelector("#motivo").value;
-    let tipoactividad;
-    radioButtons.forEach(function(radioButton) {
-        if (radioButton.checked) {
-            tipoactividad = radioButton.value;
-        }
-    });
-    if(tipoactividad == 1){
-        if(fechainicio == "" || hora == "" || motivo == "" || fechafin == ""){
-            document.querySelector(`#formulario-mensaje`).classList.add('formulario-mensaje-activo');
-            return;
-        }
-    }
-    else{
-        if(fechainicio == "" || hora == "" || motivo == ""){
-            document.querySelector(`#formulario-mensaje`).classList.add('formulario-mensaje-activo');
-            return;
-        }
-    }
     try {
         const data = new FormData(formulario);
         let resp = await fetch ('../controller/activitycontroller.php?op=guardaryeditar',{
@@ -107,7 +115,7 @@ async function GuardaryEditar(){
         });
         json = await resp.json();
         if(json.status){        
-            window.location.href = 'activity.php?exito=1&msg='+encodeURIComponent(json.msg);
+            window.location.href = 'activity.php?exito=1&msg='+encodeURIComponent(json.msg)+'&rute=mactivity';
             formulario.reset();
         }
         else{
@@ -142,7 +150,7 @@ async function Mostrar(id){
             document.querySelector("#fechainicio").disabled = false;
             document.querySelector("#fechafin").disabled = true;
             document.querySelector("#hora").disabled = false;
-            document.querySelector("#hora").value = json.data.Hora_Ingreso;
+            document.querySelector("#hora").value = json.data.Hora_Actividad;
             document.querySelector("#motivo").value = json.data.Mot_Actividad;
             document.querySelector("#motivo").disabled = false;
             document.querySelector("#motivo").nextElementSibling.classList.add('fijar');
@@ -201,10 +209,65 @@ async function ConfigDelete(id){
     }  
 }
 async function Buscar(){
-
+    let search = document.querySelector("#search_input").value;
+    let date = document.querySelector("#search_date").value;
+    if(search == "" && date ==""){
+        Listar()
+    }
+    else{
+        document.querySelector("#tblbodylista").innerHTML = "";
+        const formData = new FormData();
+        formData.append('datotexto',search)
+        formData.append('datofecha',date)
+        try {
+            let resp = await fetch ('../controller/activitycontroller.php?op=buscar',{
+                method: 'POST',
+                mode: 'cors',
+                cache: 'no-cache',
+                body: formData
+            });
+            json = await resp.json();
+            if(json.status){
+                let data = json.data;
+                var i = 0;
+                data.forEach((item)=>{
+                    i++;
+                    let newtr = document.createElement("tr");
+                    newtr.id = "row_"+item.Id_Actividad;
+                    newtr.innerHTML = `<td class="opacity">${i}</td>
+                                    <td data-label="Fecha" class="rcab">${FormatDate(item.Hora_Actividad,item.Fecha_Actividad)}</td>
+                                    <td data-label="Hora de ingreso">${FormatHora(item.Hora_Actividad,item.Fecha_Actividad)}</td>
+                                    <td data-label="Motivo" class="rcab">${item.Mot_Actividad}</td>
+                                    <td data-label="Descripción" class="rcab">${item.Desc_Actividad}</td>
+                                    <td data-label="Acciones">
+                                        <div class="data-action">
+                                            <a href="activityform.php?id=${item.Id_Actividad}&rute=auser" class="fa-solid fa-tags" title="Modificar"> </a>
+                                            <a class="fa-solid fa-trash-can" onclick="Eliminar(${item.Id_Actividad})" title="Eliminar"></a>
+                                        </div>
+                                    </td>`;
+                    document.querySelector("#tblbodylista").appendChild(newtr);
+                });
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
 async function InputSearch(){
-
+    let search = document.querySelector("#search_input").value;
+    let date = document.querySelector("#search_date").value;
+    if(search == "" && date == ""){
+        Listar();
+    }
+    else{
+        Buscar();
+    }
+}
+function QuitarFiltro(){
+    document.querySelector("#search_input").value = "";
+    document.querySelector("#search_input").nextElementSibling.classList.remove('fijar');
+    date = document.querySelector("#search_date").value = "";
+    Listar();
 }
 function HabilitarInputs(){
     var radio = document.querySelectorAll('.input-radio');
@@ -217,12 +280,14 @@ function HabilitarInputs(){
                     document.getElementById('hora').disabled = false;
                     document.getElementById('descripcion').disabled = false;
                     document.getElementById('motivo').disabled = false;
+                    document.getElementById('fechafin').nextElementSibling.textContent += ' *';
                 } else if (radioButton.value === '2') {
                     document.getElementById('fechafin').disabled = true;
                     document.getElementById('fechainicio').disabled = false;
                     document.getElementById('hora').disabled = false;
                     document.getElementById('descripcion').disabled = false;
                     document.getElementById('motivo').disabled = false;
+                    document.getElementById('fechafin').nextElementSibling.textContent = document.getElementById('fechafin').nextElementSibling.textContent.replace(' *', '');
                 }
             }
             else{
@@ -243,10 +308,10 @@ function FormatDate(time,date){
 function FormatHora(time,date){
     const  fechaHoraISO = `${date}T${time}`;
     const options = {
-        hour: 'numeric',
+        hour: '2-digit',
         minute: '2-digit',
-        hour12: true,
-        timeZone: 'America/Lima'
+        timeZone: 'America/Lima',
+        hour12: true
     }
     return new Date(fechaHoraISO).toLocaleString('es-ES', options);
 }
