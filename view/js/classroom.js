@@ -161,8 +161,8 @@ async function Buscar(){
         Listar();
     }
     try {
-        let formData = new FormData(form_search);
-        
+        let formData = new FormData();
+        formData.append('search_input',search)
         let resp = await fetch ('../controller/classroomcontroller.php?op=buscar',{
             method: 'POST',
             mode: 'cors',

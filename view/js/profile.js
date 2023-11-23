@@ -9,6 +9,13 @@ function init(){
             GuardaryEditar();
         }
     }
+    if(document.querySelector('#formulario-perfil')){
+        let btn_addperfil = document.querySelector('#btn-insert-perfil');
+        btn_addperfil.addEventListener('click', function(e) {
+            e.preventDefault();
+            InsertarPerfil();
+        });
+    }
 }
 async function Listar(){
     document.querySelector("#tblbodylista").innerHTML = "";
@@ -206,13 +213,14 @@ function MostrarCamposHijos(){
     console.log(licheckboxes.target.name);
 }
 async function InsertarPerfil(){
-    let perfil = document.querySelector('#perfil').value;
-    if(perfil == ""){
+    let perfil = document.querySelector('#txt_perfil').value;
+    if(perfil ==''){
         Swal.fire(
             "Oops...!",
             "Debe rellenar el campo perfil para registrarlo",
             "warning"
         );
+        return;
     }
     try {
         const formData = new FormData();

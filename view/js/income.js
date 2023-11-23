@@ -30,11 +30,14 @@ function init(){
         inputsearch.addEventListener("keyup",autocomplete,true);
     }
     if(document.querySelector('#formulario-modal')){
-        ListarAulas()
-        HabilitarInputs()
-        SelectTipoReporte()
+        ListarAulas();
+        HabilitarInputs();
+        SelectTipoReporte();
+        let inputsearch = document.querySelector("#search_student");
+        inputsearch.addEventListener("keyup",autocompleteModal,true);
         var btnGenerarRAula = document.querySelector('#generar_reporte_aula'); 
         var btnGenerarRFecha = document.querySelector('#generar_reporte_fecha');
+        var btnGenerarRAlumno = document.querySelector('#generar_reporte_alumno');
         btnGenerarRAula.addEventListener('click', function(e) {
             e.preventDefault();
             let tipoGeneracion;
@@ -86,6 +89,7 @@ function init(){
             window.location.href = url;
         });
         btnGenerarRFecha.addEventListener('click', function(e){
+            e.preventDefault();
             let tipoGeneracion;
             let radiofecha = document.querySelectorAll('.input-radio_fecha');
             let fechainicio = document.querySelector('#fechainicio_fecha').value;
@@ -125,6 +129,56 @@ function init(){
             }
             var url = 'report/repasistenciabyfecha.php?' +
                         'reporte_fecha=' + encodeURIComponent(tipoGeneracion) +
+                        '&fechainicio=' + encodeURIComponent(fechainicio)
+                        ;
+            if (fechafin != '') {
+                url += '&fechafin=' + encodeURIComponent(fechafin);
+            }
+            window.location.href = url;
+        });
+        btnGenerarRAlumno.addEventListener('click', function(e){
+            e.preventDefault();
+            let radiofecha = document.querySelectorAll('.input-radio_alumno');
+            let fechainicio = document.querySelector('#fechainicio_alumno').value;
+            let student = document.querySelector('#search_student').value;
+            let fechafin = document.querySelector('#fechafin_alumno').value;
+            let idstudent = document.querySelector('#idstudent').value;
+            radiofecha.forEach(function(e) {
+                if (e.checked) {
+                    tipoGeneracion = e.value;
+                }
+            });
+            if(tipoGeneracion == 1){
+                if(student == '' || fechainicio == '' || fechafin == ''){
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '¡Ooh no!',
+                        text: 'Los campos con (*) son obligatorios'
+                    })
+                    return;
+                }
+            }
+            else if (tipoGeneracion == 2){
+                if(student == '' || fechainicio == '' ){
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '¡Ooh no!',
+                        text: 'Los campos con (*) son obligatorios'
+                    })
+                    return;
+                }
+            }   
+            else{
+                Swal.fire({
+                    icon: 'warning',
+                    title: '¡Ooh no!',
+                    text: 'Debe seleccionar una opción'
+                })
+                return;
+            }
+            var url = 'report/repasistenciabyalumno.php?' +
+                        'id='+encodeURIComponent(idstudent)+
+                        '&reporte_fecha=' + encodeURIComponent(tipoGeneracion) +
                         '&fechainicio=' + encodeURIComponent(fechainicio)
                         ;
             if (fechafin != '') {
@@ -184,11 +238,7 @@ async function Listar(){
                                     <td data-label="Fecha ingreso" >${FormatDate(item.Hora_Ingreso,item.Fecha_Ingreso)}</td>
                                     <td data-label="Fecha ingreso" >${FormatHora(item.Hora_Ingreso,item.Fecha_Ingreso)}</td>
                                     <td data-label="Estado"><span class="estado estado-${item.Tipo_Ingreso}">${estadoTexto}</span></td>
-                                    <td data-label="Acciones">
-                                        <div class="data-action">
-                                            <a href="report/repasistenciaalumnobyfecha.php?id=${item.Id_Alumno}&fecha=${item.Fecha_Ingreso}" class="fa-solid fa-file-pdf" title="Generar Carnet"> </a>
-                                        </div>
-                                    </td>`;
+                                    `;
                 document.querySelector("#tblbodylista").appendChild(newtr);
             })
         }
@@ -394,11 +444,58 @@ async function autocomplete(){
         console.log(error);
     }
 }
+async function autocompleteModal(){
+    document.querySelector("#lst-student").innerHTML = "";
+    let search = document.querySelector("#search_student").value;
+    if(search == ""){
+        document.querySelector('.content-autocomplete').style.display = 'none';
+    }
+    const formData = new FormData();
+    formData.append('campo',search)
+    try {
+        let resp = await fetch("../controller/incomecontroller.php?op=autocomplete",{
+            method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache',
+            body: formData
+        });
+        json = await resp.json();
+        if(json.status){
+            let data = json.data;
+            document.querySelector('.content-autocomplete').style.display = 'block';
+            data.forEach((item) =>{
+                let identificador = "";
+                let newli = document.createElement("li");
+                newli.id = "lst_"+item.Id_Alumno;
+                if(item.Doc_Alumno =="" || item.Doc_Alumno==null){
+                    identificador = item.Cod_Alumno;
+                }
+                else{
+                    identificador = item.Doc_Alumno
+                }
+                let lsttext = `${identificador} - ${item.Nom_Alumno} ${item.Apa_Alumno} ${item.Ama_Alumno}`;
+                newli.onclick = ()=> clickListElementModal(item.Id_Alumno,lsttext);
+                newli.innerHTML = `${lsttext}`;
+                document.querySelector("#lst-student").appendChild(newli);
+            });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
 function clickListElement(doc){
     if(doc != null || doc != ''){
         ElegirAlumno(doc);
         document.querySelector("#search_input").value = "";
         document.querySelector("#search_input").nextElementSibling.classList.remove('fijar');
+        document.querySelector('.content-autocomplete').style.display = 'none';
+    }
+}
+function clickListElementModal(id,texto){
+    if(id != null || id != '' && texto != null || texto != ''){
+        document.querySelector("#search_student").value = texto;
+        document.querySelector('#idstudent').value = id;
+        document.querySelector("#search_student").nextElementSibling.classList.add('fijar');
         document.querySelector('.content-autocomplete').style.display = 'none';
     }
 }
@@ -441,11 +538,7 @@ async function Buscar(){
                                         <td data-label="Fecha ingreso" >${FormatDate(item.Hora_Ingreso,item.Fecha_Ingreso)}</td>
                                         <td data-label="Fecha ingreso" >${FormatHora(item.Hora_Ingreso,item.Fecha_Ingreso)}</td>
                                         <td data-label="Estado"><span class="estado estado-${item.Tipo_Ingreso}">${estadoTexto}</span></td>
-                                        <td data-label="Acciones">
-                                            <div class="data-action">
-                                                <a href="report/repasistenciaalumnobyfecha.php?id=${item.Id_Ingreso}&fecha=${item.Fecha_Ingreso}" class="fa-solid fa-file-pdf" title="Generar Carnet"> </a>
-                                            </div>
-                                        </td>`;
+                                        `;
                     document.querySelector("#tblbodylista").appendChild(newtr);
                 });
             }
@@ -489,6 +582,7 @@ function CloseModal(){
 function HabilitarInputs(){
     var radioaula = document.querySelectorAll('.input-radio_aula');
     var radiofecha = document.querySelectorAll('.input-radio_fecha');
+    var radiofecha = document.querySelectorAll('.input-radio_alumno');
     radioaula.forEach(function (e) {
         e.addEventListener("change", function () {
             if (e.checked) {
@@ -510,13 +604,30 @@ function HabilitarInputs(){
         e.addEventListener("change", function () {
             if (e.checked) {
                 if (e.value === '1') {
+                    document.getElementById('search_student').disabled=false;
                     document.getElementById('fechainicio_fecha').disabled = false;
                     document.getElementById('fechafin_fecha').disabled = false;
                     document.getElementById('fechafin_fecha').nextElementSibling.textContent += ' *';
                 }else if (e.value === '2') {
+                    document.getElementById('search_student').disabled=false;
                     document.getElementById('fechainicio_fecha').disabled = false;
                     document.getElementById('fechafin_fecha').disabled = true;
                     document.getElementById('fechafin_fecha').nextElementSibling.textContent = document.getElementById('fechafin_fecha').nextElementSibling.textContent.replace(' *', '');
+                }
+            }
+        })
+    })
+    radiofecha.forEach(function (e) {
+        e.addEventListener("change", function () {
+            if (e.checked) {
+                if (e.value === '1') {
+                    document.getElementById('fechainicio_alumno').disabled = false;
+                    document.getElementById('fechafin_alumno').disabled = false;
+                    document.getElementById('fechafin_alumno').nextElementSibling.textContent += ' *';
+                }else if (e.value === '2') {
+                    document.getElementById('fechainicio_alumno').disabled = false;
+                    document.getElementById('fechafin_alumno').disabled = true;
+                    document.getElementById('fechafin_alumno').nextElementSibling.textContent = document.getElementById('fechafin_alumno').nextElementSibling.textContent.replace(' *', '');
                 }
             }
         })
@@ -529,6 +640,7 @@ function SelectTipoReporte(){
         if (selectedValue === '1') {
             document.getElementById('report-aula').style.display = 'block';
             document.getElementById('report-fecha').style.display = 'none';
+            document.getElementById('report-alumno').style.display = 'none';
             document.querySelectorAll('.input-form-date').forEach(function(e) {
                 e.disabled = true;
             });
@@ -537,9 +649,19 @@ function SelectTipoReporte(){
         } else if (selectedValue === '2') {
             document.getElementById('report-fecha').style.display = 'block';
             document.getElementById('report-aula').style.display = 'none';
+            document.getElementById('report-alumno').style.display = 'none';
             document.querySelectorAll('.input-form-date').forEach(function(e) {
                 e.disabled = true;
             });
+        }
+        else if (selectedValue === '3') {
+            document.getElementById('report-fecha').style.display = 'none';
+            document.getElementById('report-aula').style.display = 'none';
+            document.getElementById('report-alumno').style.display = 'block';
+            document.querySelectorAll('.input-form-date').forEach(function(e) {
+                e.disabled = true;
+            });
+            document.querySelector('#search_student').disabled = true;
         }
     });
 }

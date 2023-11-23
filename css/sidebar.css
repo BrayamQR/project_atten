@@ -21,14 +21,14 @@
     margin-top: 20px;
 }
 .logo-content .logo i{
-    font-size: 30px;
+    font-size: 25px;
     text-align: center;
     min-width: 78px;
     height: 50px;
     line-height: 50px;
 }
 .logo-content .logo .logo-name{
-    font-size: 16px;
+    font-size: 15px;
     font-weight: normal;
     pointer-events: none;
     opacity: 0;
@@ -39,7 +39,7 @@
 }
 .logo-content .logo .logo-name span{
     display: block;
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 600;
     color: #fff;
 }
@@ -103,7 +103,7 @@
     border-radius: 12px;
     line-height: 50px;
     text-align: center;
-    font-size: 22px;
+    font-size: 18px;
 }
 .sidebar ul li .arrow{
     font-size: 15px;
@@ -139,6 +139,7 @@
     opacity: 0;
     pointer-events: none;
     transition: all .4s ease;
+    font-size: 15px;
 }
 .sidebar.active .link-name{
     opacity: 1;
@@ -180,7 +181,7 @@
 }
 .sidebar ul li .sub-menu a{
     color: #fff;
-    font-size: 15px;
+    font-size: 13px;
     padding: 5px 0;
     white-space: nowrap;
     opacity: 0.6;
@@ -193,7 +194,7 @@
     display: none;
 }
 .sidebar ul li .sub-menu .submenu-name{
-    font-size: 18px;
+    font-size: 15px;
     opacity: 1;
     display: block;
     color: #fff;
@@ -233,7 +234,7 @@
 }
 .sidebar .profile-content .profile{
     position: relative;
-    padding: 10px 6px;
+    padding: 6px;
     height: 60px;
     transition: all .4s ease;
     background: none;
@@ -257,23 +258,23 @@
     margin-left: 10px;
 }
 .profile .profile-details .name{
-    font-size: 15px;
+    font-size: 12px;
     font-weight: 400;
 }
 .profile .profile-details .position{
-    font-size: 12px;
+    font-size: 10px;
     color: #8f8f8f;
 }
 .profile .btn-exit{
     text-decoration: none;
     color: #fff;
-    min-width: 50px;
-    line-height: 50px;
+    min-width: 40px;
+    line-height: 40px;
     position: absolute;
-    bottom: 5px;
+    bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 20px;
+    font-size: 15px;
     border-radius: 12px;
     text-align: center;
     transition: all .4s ease;

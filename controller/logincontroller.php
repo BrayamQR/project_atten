@@ -24,7 +24,7 @@ class LoginController
                         $rspta = $this->loginModel->ValidarUsuario(...$data);
                         $rspta = $rspta->fetch_object();
                         if (empty($rspta)) {
-                            $arrayResponse = array('status' => false, 'msg' => 'Datos no encontrados');
+                            $arrayResponse = array('status' => false, 'msg' => 'El usuario y/o la contraseña son incorrectos');
                         } else {
                             session_start();
                             $_SESSION['Id_Usuario'] = $rspta->Id_Usuario;

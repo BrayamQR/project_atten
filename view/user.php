@@ -37,22 +37,24 @@ include('../config/session.php');
                                 <a href="userform.php?rute=auser" class="fa-solid fa-plus" title="Agregar"></a>
                             </div>
                         </div>
-                        <table id="tblDatos">
-                            <thead>
-                                <th>#</th>
-                                <th>Código</th>
-                                <th>Nombre</th>
-                                <th>Dirección</th>
-                                <th>Telefono</th>
-                                <th>Email</th>
-                                <th>Usuario</th>
-                                <th>Tipo</th>
-                                <th>Acciones</th>
-                            </thead>
-                            <tbody id="tblbodylista">
+                        <div class="content-info-table">
+                            <table id="tblDatos">
+                                <thead>
+                                    <th>#</th>
+                                    <th>Código</th>
+                                    <th>Nombre</th>
+                                    <th>Dirección</th>
+                                    <th>Telefono</th>
+                                    <th>Email</th>
+                                    <th>Usuario</th>
+                                    <th>Tipo</th>
+                                    <th>Acciones</th>
+                                </thead>
+                                <tbody id="tblbodylista">
 
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <div id="paginador"></div>

@@ -44,7 +44,7 @@ class Estudiante
     }
     public function Buscar($dato)
     {
-        $sql = "SELECT * FROM alumno WHERE Doc_Alumno LIKE '$dato%' OR Cod_Alumno LIKE '$dato%' OR Apa_Alumno LIKE '$dato%' OR Ama_Alumno LIKE '$dato%' OR Nom_Alumno LIKE '$dato%'";
+        $sql = "SELECT * FROM alumno INNER JOIN aula ON alumno.Id_Aula = aula.Id_aula WHERE Doc_Alumno LIKE '$dato%' OR Cod_Alumno LIKE '$dato%' OR Apa_Alumno LIKE '$dato%' OR Ama_Alumno LIKE '$dato%' OR Nom_Alumno LIKE '$dato%'";
         $query = mysqli_query($this->cnx, $sql);
         mysqli_close($this->cnx);
         return $query;

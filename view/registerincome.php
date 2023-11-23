@@ -30,7 +30,7 @@ include('../config/session.php');
                             <div class="content-search" id="form-search-autocomplete">
                                 <div class="content-search-text">
                                     <button class="fa-solid fa-magnifying-glass btn-search" title="Buscar" onclick="autocomplete()"></button>
-                                    <input type="text" name="search_input" id="search_input" class="input-form">
+                                    <input type="text" name="search_input" id="search_input" class="input-form" autocomplete="off">
                                     <label class="input-label" for="">Buscar por: DNI | Nombres | Apellidos</label>
                                     <div class="content-autocomplete">
                                         <ul id="lst-student">

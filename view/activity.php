@@ -45,19 +45,21 @@ include('../config/session.php');
                                 <a href="activityform.php?rute=aactivity" class="fa-solid fa-plus" title="Agregar"></a>
                             </div>
                         </div>
-                        <table id="tblDatos">
-                            <thead>
-                                <th>#</th>
-                                <th>Fecha</th>
-                                <th>Hora de ingreso</th>
-                                <th>Motivo</th>
-                                <th>Descripción</th>
-                                <th>Acciones</th>
-                            </thead>
-                            <tbody id="tblbodylista">
+                        <div class="content-info-table">
+                            <table id="tblDatos">
+                                <thead>
+                                    <th>#</th>
+                                    <th>Fecha</th>
+                                    <th>Hora de ingreso</th>
+                                    <th>Motivo</th>
+                                    <th>Descripción</th>
+                                    <th>Acciones</th>
+                                </thead>
+                                <tbody id="tblbodylista">
 
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <div id="paginador"></div>

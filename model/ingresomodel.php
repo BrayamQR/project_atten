@@ -37,7 +37,7 @@ class Ingreso
     }
     public function BuscarAlumno($dato)
     {
-        $sql = "SELECT * FROM alumno WHERE Doc_Alumno LIKE '$dato%' OR Cod_Alumno LIKE '$dato%' OR Nom_Alumno LIKE '$dato%' OR Apa_Alumno LIKE '$dato%' OR Ama_Alumno LIKE '$dato%' LIMIT 0,10";
+        $sql = "SELECT * FROM alumno WHERE Doc_Alumno LIKE '$dato%' OR Cod_Alumno LIKE '$dato%' OR Nom_Alumno LIKE '$dato%' OR Apa_Alumno LIKE '$dato%' OR Ama_Alumno LIKE '$dato%' LIMIT 0,5";
         $query = mysqli_query($this->cnx, $sql);
         mysqli_close($this->cnx);
         return $query;

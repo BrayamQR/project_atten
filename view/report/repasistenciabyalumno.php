@@ -1,7 +1,9 @@
 <?php
 require('../../lib/fpdf185/fpdf.php');
 $id = isset($_GET['id']) ? $_GET['id'] : null;
-$fecha = isset($_GET['fecha']) ? $_GET['fecha'] : null;
+$reporteAula = isset($_GET['reporte_aula']) ? $_GET['reporte_aula'] : null;
+$fechainicio = isset($_GET['fechainicio']) ? $_GET['fechainicio'] : null;
+$fechafin = isset($_GET['fechafin']) ? $_GET['fechafin'] : null;
 class PDF extends FPDF
 {
     // Cabecera de página
@@ -13,7 +15,7 @@ class PDF extends FPDF
         $this->SetFont('Arial', 'B', 15);
 
         // Título
-        $this->Cell(0, 10, utf8_decode('REPORTE DEL ALUMNO POR FECHA'), 0, 1, 'C');
+        $this->Cell(0, 10, utf8_decode('REPORTE DE ASISTENCIAS POR ALUMNO'), 0, 1, 'C');
         // Salto de línea
         $this->Ln(20);
     }
@@ -31,7 +33,7 @@ class PDF extends FPDF
 }
 require('../../config/cnx.php');
 $cnx = connection();
-$sql = "SELECT * FROM alumno INNER JOIN aula ON alumno.Id_Aula = aula.Id_Aula INNER JOIN ingreso ON  alumno.Id_Alumno = ingreso.Id_Alumno WHERE alumno.Id_Alumno = $id AND ingreso.Fecha_Ingreso = '$fecha'";
+$sql = "SELECT * FROM alumno INNER JOIN aula ON alumno.Id_Aula = aula.Id_Aula WHERE alumno.Id_Alumno = $id";
 $query = mysqli_query($cnx, $sql);
 
 $rspta = $query->fetch_assoc();
@@ -98,20 +100,33 @@ $pdf->Cell(0, 0, utf8_decode($rspta['Seccion_Aula']), 0, 1);
 $pdf->Image('../../src/qr-student/' . $rspta['Qr_Alumno'], 150, 35, 50);
 $pdf->Ln(15);
 
-if ($rspta['Tipo_Ingreso'] == 1) {
-    $estado = 'Asistio';
+if ($fechafin != null || $fechafin != '') {
+    $sql = "SELECT * FROM alumno INNER JOIN ingreso ON alumno.Id_Alumno = ingreso.Id_Alumno WHERE alumno.Id_Alumno = $id AND ingreso.Fecha_Ingreso >= '$fechainicio' AND ingreso.Fecha_Ingreso <= '$fechafin'";
 } else {
-    $estado = 'Tardanza';
+    $sql = "SELECT * FROM alumno INNER JOIN ingreso ON alumno.Id_Alumno = ingreso.Id_Alumno WHERE alumno.Id_Alumno = $id AND ingreso.Fecha_Ingreso = '$fechainicio'";
 }
-$pdf->SetX(30);
+$query = mysqli_query($cnx, $sql);
+$pdf->SetX(25);
 $pdf->SetFont('Arial', 'B', 12);
+$pdf->Cell(15, 10, utf8_decode('#'), 1, 0, 'C', 0);
 $pdf->Cell(50, 10, utf8_decode('Fecha'), 1, 0, 'C', 0);
 $pdf->Cell(50, 10, utf8_decode('Hora Ingreso'), 1, 0, 'C', 0);
 $pdf->Cell(50, 10, utf8_decode('Estado'), 1, 1, 'C', 0);
-$pdf->SetX(30);
-$pdf->SetFont('Arial', '', 12);
-$pdf->Cell(50, 10, utf8_decode($rspta['Fecha_Ingreso']), 1, 0, 'C', 0);
-$pdf->Cell(50, 10, utf8_decode($rspta['Hora_Ingreso']), 1, 0, 'C', 0);
-$pdf->Cell(50, 10, utf8_decode($estado), 1, 1, 'C', 0);
+
+$i = 0;
+while ($row = $query->fetch_assoc()) {
+    $i++;
+    if ($row['Tipo_Ingreso'] == 1) {
+        $estado = 'Asistio';
+    } else {
+        $estado = 'Tardanza';
+    }
+    $pdf->SetX(25);
+    $pdf->SetFont('Arial', '', 12);
+    $pdf->Cell(15, 10, utf8_decode($i), 1, 0, 'C', 0);
+    $pdf->Cell(50, 10, utf8_decode($row['Fecha_Ingreso']), 1, 0, 'C', 0);
+    $pdf->Cell(50, 10, utf8_decode($row['Hora_Ingreso']), 1, 0, 'C', 0);
+    $pdf->Cell(50, 10, utf8_decode($estado), 1, 1, 'C', 0);
+}
 $pdf->Output();
 mysqli_close($cnx);

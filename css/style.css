@@ -127,25 +127,36 @@ main{
 .content-info .content-action .content-search{
     display: flex;
     justify-content: space-between;
-    width: 70%;
+    width: 75%;
     height: 40px;
 }
 .content-info .content-action .content-search .content-search-text{
     display: flex;
     position: relative;
-    width: 55%;
+    width: 70%;
 }
-.content-info .content-action .content-search .content-search-text .content-autocomplete{
+.content-info .content-action .content-search .content-search-text .content-autocomplete,.input-content .content-autocomplete{
     position: absolute;
     margin-top: 40px;
     background: #fff;
-    width: 84.5%;
+    width: 90%;
     border: 1px solid #cbcbcb;
     margin-left: 10px;
     box-shadow: 0px 0px 15px rgba(0,0,0,.5);
     display: none;
 }
-.content-info .content-action .content-search .content-search-text .content-autocomplete li{
+#grupo-autocomplete-student .input-content input{
+    z-index: 99;
+}
+#grupo-autocomplete-student .input-content label{
+    z-index: 100;
+}
+.input-content .content-autocomplete{
+    width: 90%;
+    z-index: 80;
+    left: 31px;
+}
+.content-info .content-action .content-search .content-search-text .content-autocomplete li, .input-content .content-autocomplete li{
     list-style: none;
     height: 40px;
     line-height: 40px;
@@ -153,17 +164,19 @@ main{
     cursor: pointer;
     border-bottom: 1px solid #cbcbcb;
     transition: all .3s ease;
+    font-size: 13px;
+}
+.input-content .content-autocomplete li{
+    font-size: 12px;
 }
 .content-info .content-action .content-search .content-search-text .content-autocomplete li:hover{
     background: #eee;
 }
 .content-info .content-action .content-search .content-search-date{
-    width: 18%;
     display: flex;
     position: relative;
 }
 .content-info .content-action .content-search .content-btn-default-search{
-    width: 20%;
     height: 40px;
     background: transparent;
 }
@@ -174,6 +187,7 @@ main{
     cursor: pointer;
     border-radius: 10px;
     transition: all .3s ease;
+    font-size: 15px;
 }
 .content-info .content-action .content-search .content-btn-default-search a:hover{
     background: #eee;
@@ -294,7 +308,7 @@ main{
 }
 */
 .content-info .content-action .content-btn{
-    width: 25%;
+    width: 20%;
     height: 40px;
     line-height: 40px;
     text-align: right;

@@ -46,21 +46,22 @@ include('../config/session.php');
                                 <a href="registerincome.php?rute=aincome" class="fa-solid fa-plus" title="Agregar"></a>
                             </div>
                         </div>
-                        <table id="tblDatos">
-                            <thead>
-                                <th>#</th>
-                                <th>Identificador</th>
-                                <th>Estudiante</th>
-                                <th>Grado y sección</th>
-                                <th>Fecha ingreso</th>
-                                <th>Hora ingreso</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
-                            </thead>
-                            <tbody id="tblbodylista">
+                        <div class="content-info-table">
+                            <table id="tblDatos">
+                                <thead>
+                                    <th>#</th>
+                                    <th>Identificador</th>
+                                    <th>Estudiante</th>
+                                    <th>Grado y sección</th>
+                                    <th>Fecha ingreso</th>
+                                    <th>Hora ingreso</th>
+                                    <th>Estado</th>
+                                </thead>
+                                <tbody id="tblbodylista">
 
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="modal" id="modal-export">
                         <div class="content-modal">
@@ -81,6 +82,7 @@ include('../config/session.php');
                                                             <option value="" disabled selected></option>
                                                             <option value="1">AULA</option>
                                                             <option value="2">FECHA</option>
+                                                            <option value="3">ALUMNO</option>
                                                         </select>
                                                         <label class="input-label" for="">Generar por</label>
                                                         <i class="formulario-validacion-estado fa-solid fa-xmark"></i>
@@ -88,7 +90,7 @@ include('../config/session.php');
                                                 </div>
                                                 <p class="formulario-input-error">Debe seleccionar una opcion.</p>
                                             </div>
-                                            <div class="content-por-aula" id="report-aula">
+                                            <div class="content-form-reporte" id="report-aula">
                                                 <h6>Rerpote por aula</h6>
                                                 <div class="formulario-grupo-full grupo-radio" id="grupo-radio">
                                                     <h3>Seleccione una opción</h3>
@@ -135,7 +137,7 @@ include('../config/session.php');
                                                     <a id="generar_reporte_aula">Generar</a>
                                                 </div>
                                             </div>
-                                            <div class="content-por-fecha" id="report-fecha">
+                                            <div class="content-form-reporte" id="report-fecha">
                                                 <h6>Reporte por fecha</h6>
 
                                                 <div class="formulario-grupo-full grupo-radio" id="grupo-radio">
@@ -168,6 +170,53 @@ include('../config/session.php');
                                                 </div>
                                                 <div class="content-btn-action">
                                                     <a id="generar_reporte_fecha">Generar</a>
+                                                </div>
+                                            </div>
+                                            <div class="content-form-reporte" id="report-alumno">
+                                                <h6>Reporte por alumno</h6>
+
+                                                <div class="formulario-grupo-full grupo-radio" id="grupo-radio">
+                                                    <h3>Seleccione una opción</h3>
+                                                    <div class="input-content grupo-radio-input">
+                                                        <input type="radio" class="input-radio input-radio_alumno" name="reporte_alumno" id="programada_alumno" value="1">
+                                                        <label class="label-radio" for="programada_alumno">Rango de Fechas</label>
+                                                        <input type="radio" class="input-radio input-radio_alumno" name="reporte_alumno" id="periodica_alumno" value="2">
+                                                        <label class="label-radio" for="periodica_alumno">Fecha Puntual</label>
+                                                    </div>
+                                                    <p class="formulario-input-error">Elija una opción</p>
+                                                </div>
+                                                <div class="formulario-grupo formulario-grupo-full" id="grupo-autocomplete-student">
+                                                    <div class="input-content">
+                                                        <input type="hidden" name="idstundent" id="idstudent">
+                                                        <i class="fa-solid fa-calendar-days"></i>
+                                                        <input type="text" name="search_student" id="search_student" class="input-form" autocomplete="off">
+                                                        <label class="input-label" for="">Buscar por: DNI | Nombres | Apellidos *</label>
+                                                        <div class="content-autocomplete">
+                                                            <ul id="lst-student">
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="formulario-grupo formulario-grupo-full" id="grupo-fechainicio">
+                                                    <div class="input-content input-datetime">
+                                                        <i class="fa-solid fa-calendar-days"></i>
+                                                        <input type="date" class="input-form-date" name="fechainicio_alumno" id="fechainicio_alumno">
+                                                        <label class="input-label input-label-date" for="">Fecha Inicio *</label>
+                                                        <i class="formulario-validacion-estado fa-solid fa-xmark"></i>
+                                                    </div>
+                                                    <p class="formulario-input-error">Debe ingresar una fecha</p>
+                                                </div>
+                                                <div class="formulario-grupo formulario-grupo-full" id="grupo-fechafin">
+                                                    <div class="input-content input-datetime">
+                                                        <i class="fa-solid fa-calendar-days"></i>
+                                                        <input type="date" class="input-form-date" name="fechafin_alumno" id="fechafin_alumno">
+                                                        <label class="input-label input-label-date" for="">Fecha Fin</label>
+                                                        <i class="formulario-validacion-estado fa-solid fa-xmark"></i>
+                                                    </div>
+                                                    <p class="formulario-input-error">Debe ingresar una fecha</p>
+                                                </div>
+                                                <div class="content-btn-action">
+                                                    <a id="generar_reporte_alumno">Generar</a>
                                                 </div>
                                             </div>
                                         </div>

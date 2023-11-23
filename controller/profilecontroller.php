@@ -94,12 +94,16 @@ class profileController
                 break;
             case 'guardarperfil':
                 if ($_POST) {
-                    $perfil = $_POST['perfil'];
-                    $rspta = $this->profileModel->InsertarPerfil($perfil);
-                    if ($rspta) {
-                        $arrayResponse = array('status' => true, 'msg' => 'Datos guardados correctamente');
+                    if (empty($_POST['perfil'])) {
+                        $arrayResponse = array('status' => false, 'msg' => 'Error de datos');
                     } else {
-                        $arrayResponse = array('status' => false, 'msg' => 'Error al guardar los datos');
+                        $perfil = trim($_POST['perfil']);
+                        $rspta = $this->profileModel->InsertarPerfil($perfil);
+                        if ($rspta) {
+                            $arrayResponse = array('status' => true, 'msg' => 'Datos guardados correctamente');
+                        } else {
+                            $arrayResponse = array('status' => false, 'msg' => 'Error al guardar los datos');
+                        }
                     }
                     echo json_encode($arrayResponse);
                 }

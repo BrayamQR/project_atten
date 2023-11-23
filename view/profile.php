@@ -27,31 +27,33 @@ include('../config/session.php')
                     <div class="content-info">
                         <div class="content-flex">
                             <div class="content-table">
-                                <div class="formulario-perfil">
+                                <div class="formulario-perfil" id="formulario-perfil">
                                     <div class="form-input">
                                         <div class="formulario-grupo">
                                             <div class="input-content">
                                                 <i class="fa-regular fa-id-badge"></i>
-                                                <input type="text" class="input-form" name="perfil" id="perfil">
+                                                <input type="text" class="input-form" name="perfil" id="txt_perfil">
                                                 <label class="input-label" for="">Perfil</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-action">
-                                        <button type="button" onclick="InsertarPerfil()" class="fa-solid fa-plus" title="Agregar"></button>
+                                        <button id="btn-insert-perfil" class="fa-solid fa-plus" title="Agregar"></button>
                                     </div>
                                 </div>
-                                <table id="tblDatos">
-                                    <thead>
-                                        <th>#</th>
-                                        <th>Perfil</th>
-                                        <th>Estado</th>
-                                        <th>Acciones</th>
-                                    </thead>
-                                    <tbody id="tblbodylista">
+                                <div class="content-info-table">
+                                    <table id="tblDatos">
+                                        <thead>
+                                            <th>#</th>
+                                            <th>Perfil</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </thead>
+                                        <tbody id="tblbodylista">
 
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                             <div class="content-lst-access" id="content-lst-access">
                                 <h4>Asignar permisos</h4>
