@@ -572,6 +572,7 @@ function ShowModal(){
     document.querySelector('#tiporeporte').nextElementSibling.classList.remove('fijar');
     document.getElementById('report-aula').style.display = 'none';
     document.getElementById('report-fecha').style.display = 'none';
+    document.getElementById('report-alumno').style.display = 'none';
     document.querySelector('#idaula').value = 0;
     document.querySelector('#idaula').nextElementSibling.classList.remove('fijar');
 }
